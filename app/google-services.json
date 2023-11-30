@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "744018463918",
+    "project_id": "fishery-app-12659",
+    "storage_bucket": "fishery-app-12659.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744018463918:android:767bdbffa82bf17e02713f",
+        "android_client_info": {
+          "package_name": "com.bangkit.fishery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "744018463918-i4tr03d78qbnks8a3uttbi07sfkmutj6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bangkit.fishery",
+            "certificate_hash": "d5edd8e1ade5775b7dab7ef81ffbaf6f5993a909"
+          }
+        },
+        {
+          "client_id": "744018463918-ne7umrmvtee6419baa3ocd3abvkh1ui1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCE99NKN16GxZz3nt5Ksvmw2p33YbGcGMc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "744018463918-ne7umrmvtee6419baa3ocd3abvkh1ui1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
