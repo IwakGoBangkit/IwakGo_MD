@@ -3,7 +3,6 @@ package com.bangkit.fishery.ui.screen.authentication.register
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -111,6 +110,10 @@ fun RegisterContent(
         mutableStateOf(false)
     }
 
+    var isPasswordMatching by remember {
+        mutableStateOf(true)
+    }
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -132,13 +135,13 @@ fun RegisterContent(
 
         OutlinedTextField(
             value = name,
-            onValueChange = onNameChanged,
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
+            onValueChange = { onNameChanged(it) },
             label = { Text(stringResource(R.string.username)) },
             keyboardOptions = KeyboardOptions.Default,
-            shape = RoundedCornerShape(24.dp)
+            shape = RoundedCornerShape(24.dp),
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp)
         )
 
         OutlinedTextField(
@@ -147,14 +150,14 @@ fun RegisterContent(
                 onEmailChanged(email)
                 isEmailValid = emailValidation(email)
             },
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
             label = { Text(stringResource(R.string.email)) },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Email
             ),
-            shape = RoundedCornerShape(24.dp)
+            shape = RoundedCornerShape(24.dp),
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
         )
 
         if (!isEmailValid) {
@@ -163,10 +166,7 @@ fun RegisterContent(
 
         OutlinedTextField(
             value = password,
-            onValueChange = onPasswordChanged,
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
+            onValueChange = { onPasswordChanged(it) },
             label = { Text(stringResource(R.string.password)) },
             trailingIcon = {
                 IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
@@ -179,21 +179,33 @@ fun RegisterContent(
                 }
             },
             keyboardOptions = KeyboardOptions.Default,
-            shape = RoundedCornerShape(24.dp)
+            visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+            shape = RoundedCornerShape(24.dp),
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp)
         )
 
         OutlinedTextField(
             value = confirmationPassword,
-            onValueChange = onConfirmationPasswordChanged,
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
+            onValueChange = {
+                onConfirmationPasswordChanged(it)
+                isPasswordMatching = it == password
+            },
             label = { Text(stringResource(R.string.confirmation_password)) },
             keyboardOptions = KeyboardOptions.Default,
-            visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
             shape = RoundedCornerShape(24.dp),
+            isError = !isPasswordMatching,
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp)
+            )
 
-        )
+        if (!isPasswordMatching) {
+            Text(
+                text = stringResource(R.string.confirmation_password_text, Color.Red)
+            )
+        }
 
         Text(
             stringResource(R.string.agreement_terms_condition),
@@ -211,11 +223,11 @@ fun RegisterContent(
         }
 
         Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
             modifier = modifier
                 .fillMaxWidth()
-                .padding(top = 104.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+                .padding(top = 88.dp),
         ) {
             Text(
                 stringResource(R.string.have_account),

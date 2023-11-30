@@ -7,15 +7,16 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -30,9 +31,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -43,7 +46,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bangkit.fishery.R
 import com.bangkit.fishery.ui.components.LoadingDialog
 import com.bangkit.fishery.ui.screen.authentication.common.loginIntentSender
-import com.bangkit.fishery.ui.screen.authentication.model.UserData
 import com.bangkit.fishery.util.emailValidation
 import kotlinx.coroutines.launch
 
@@ -183,11 +185,22 @@ fun LoginContent(
             shape = RoundedCornerShape(24.dp)
         )
 
+        TextButton(
+            onClick = { /*TODO*/ },
+            modifier = modifier
+                .align(Alignment.End)
+                .padding(top = 8.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.forgot_password)
+            )
+        }
+
         Button(
             onClick = loggedIn,
             modifier = modifier
                 .fillMaxWidth()
-                .padding(top = 32.dp)
+                .padding(top = 24.dp)
         ) {
             Text(stringResource(R.string.login))
         }
@@ -199,14 +212,14 @@ fun LoginContent(
                 .padding(top = 32.dp)
         )
 
-        Button(
+        OutlinedButton(
             onClick = onLoginWithGoogle,
             modifier = modifier
                 .fillMaxWidth()
                 .padding(top = 32.dp)
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_google),
+                imageVector = ImageVector.vectorResource(R.drawable.ic_google),
                 contentDescription = null,
                 modifier = modifier.padding(end = 8.dp)
             )
