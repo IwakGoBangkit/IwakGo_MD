@@ -28,6 +28,7 @@ class FirebaseAuthImpl @Inject constructor(
                 UserData(
                     userId = uid,
                     username = displayName,
+                    email = email,
                     photoUrl = photoUrl?.toString()
                 )
             },
@@ -43,6 +44,7 @@ class FirebaseAuthImpl @Inject constructor(
                 UserData(
                     userId = uid,
                     username = displayName,
+                    email = email,
                     photoUrl = photoUrl?.toString()
                 )
             },
@@ -66,6 +68,7 @@ class FirebaseAuthImpl @Inject constructor(
                 UserData(
                     userId = uid,
                     username = displayName,
+                    email = email,
                     photoUrl = photoUrl?.toString()
                 )
             },
@@ -77,6 +80,7 @@ class FirebaseAuthImpl @Inject constructor(
         UserData(
             userId = uid,
             username = displayName,
+            email = email,
             photoUrl = photoUrl?.toString()
         )
     }
