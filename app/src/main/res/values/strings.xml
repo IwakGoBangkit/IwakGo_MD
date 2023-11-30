@@ -5,6 +5,8 @@
     <string name="welcome1">Tingkatkan produktivitas usaha perikanan Anda!</string>
     <string name="welcome2">Temukan tips budidaya ikan dan cek kualitas ikan Anda secara berkala.</string>
     <string name="welcome3">Ayo Bergabung, Gratis!!</string>
+    <string name="loading">Harap Tunggu...</string>
+    <string name="web_client_id">744018463918-ne7umrmvtee6419baa3ocd3abvkh1ui1.apps.googleusercontent.com</string>
 
     <string name="new_account">Buat Akun Baru</string>
     <string name="login">Masuk</string>
@@ -14,6 +16,7 @@
     <string name="email">Email</string>
     <string name="invalid_email">Email tidak valid</string>
     <string name="password">Password</string>
+    <string name="confirmation_password">Konfirmasi Password</string>
 
     <string name="or">Atau</string>
     <string name="login_with_google">Masuk dengan Akun Google</string>

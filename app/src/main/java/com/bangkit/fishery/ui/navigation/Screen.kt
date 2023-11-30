@@ -33,9 +33,7 @@ sealed class Screen(val route: String) {
 
     object Profile : Screen("profile")
 
-    object ChangeProfile : Screen("profile/edit_profile") {
-        fun createRoute(title: String) = "profile/$title"
-    }
+    object ChangeProfile : Screen("profile/edit_profile")
 
     object ChangeEmail : Screen("profile/edit_email") {
         fun createRoute(title: String) = "profile/$title"

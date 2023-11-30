@@ -34,10 +34,10 @@ fun SplashScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         Image(
-            painter = painterResource(R.drawable.boarding),
+            painter = painterResource(R.drawable.logo_fishery),
             contentDescription = null,
             modifier = Modifier
-                .size(144.dp)
+                .size(256.dp)
                 .align(Alignment.Center)
         )
     }

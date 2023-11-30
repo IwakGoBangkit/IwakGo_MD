@@ -1,5 +1,9 @@
 package com.bangkit.fishery.ui.screen.authentication.login
 
+import android.app.Activity.RESULT_OK
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,14 +20,17 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -31,37 +38,90 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bangkit.fishery.R
+import com.bangkit.fishery.ui.components.LoadingDialog
+import com.bangkit.fishery.ui.screen.authentication.common.loginIntentSender
+import com.bangkit.fishery.ui.screen.authentication.model.UserData
 import com.bangkit.fishery.util.emailValidation
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
-    modifier: Modifier = Modifier.fillMaxSize(),
+    modifier: Modifier = Modifier,
     moveToRegister: () -> Unit,
-    moveToHome: () -> Unit
+    moveToHome: () -> Unit,
+    viewModel: LoginViewModel = hiltViewModel(),
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+    val launcher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartIntentSenderForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            scope.launch {
+                viewModel.onEvent(LoginEvent.LoginWithGoogle(result.data ?: return@launch))
+            }
+        }
+    }
+
     LoginContent(
+        email = state.email,
+        password = state.password,
+        onEmailChanged = { email ->
+            viewModel.onEvent(LoginEvent.OnEmailChanged(email))
+        },
+        onPasswordChanged = { password ->
+            viewModel.onEvent(LoginEvent.OnPasswordChanged(password))
+        },
+        onLoginWithGoogle = {
+            viewModel.onEvent(LoginEvent.SetLoadingState(true))
+            scope.launch {
+                val loginIntentSender = loginIntentSender(context)
+                viewModel.onEvent(LoginEvent.SetLoadingState(false))
+                launcher.launch(
+                    IntentSenderRequest.Builder(
+                        loginIntentSender ?: return@launch
+                    ).build()
+                )
+            }
+        },
+        loggedIn = {
+            viewModel.onEvent(LoginEvent.LoginWithEmailPassword(state.email, state.password))
+        },
         moveToRegister = moveToRegister,
-        moveToHome = moveToHome
+        modifier = modifier
     )
+
+    LaunchedEffect(state.loginSuccessful) {
+        if (state.loginSuccessful) {
+            moveToHome()
+            viewModel.onEvent(LoginEvent.ResetState)
+        }
+    }
+
+    if (state.isLoading) {
+        LoadingDialog()
+    }
 }
 
 @Composable
 fun LoginContent(
-    modifier: Modifier = Modifier,
+    email: String,
+    password: String,
+    onEmailChanged: (email: String) -> Unit,
+    onPasswordChanged: (password: String) -> Unit,
+    onLoginWithGoogle: () -> Unit,
     moveToRegister: () -> Unit,
-    moveToHome: () -> Unit
+    loggedIn: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    var email by remember {
-        mutableStateOf("")
-    }
 
     var isEmailValid by remember {
         mutableStateOf(true)
-    }
-
-    var password by remember {
-        mutableStateOf("")
     }
 
     var passwordVisibility by remember {
@@ -82,9 +142,9 @@ fun LoginContent(
 
         OutlinedTextField(
             value = email,
-            onValueChange = { newEmail ->
-                email = newEmail
-                isEmailValid = emailValidation(newEmail)
+            onValueChange = {
+                onEmailChanged(it)
+                isEmailValid = emailValidation(it)
             },
             modifier = modifier
                 .fillMaxWidth()
@@ -103,7 +163,7 @@ fun LoginContent(
 
         OutlinedTextField(
             value = password,
-            onValueChange = { newPassword -> password = newPassword },
+            onValueChange = { onPasswordChanged(it) },
             modifier = modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp),
@@ -124,7 +184,7 @@ fun LoginContent(
         )
 
         Button(
-            onClick = moveToHome,
+            onClick = loggedIn,
             modifier = modifier
                 .fillMaxWidth()
                 .padding(top = 32.dp)
@@ -140,7 +200,7 @@ fun LoginContent(
         )
 
         Button(
-            onClick = { /*TODO*/ },
+            onClick = onLoginWithGoogle,
             modifier = modifier
                 .fillMaxWidth()
                 .padding(top = 32.dp)
