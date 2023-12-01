@@ -10,13 +10,13 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
@@ -35,18 +35,22 @@ fun CardPosting(
     description: String,
     modifier: Modifier = Modifier
 ) {
-    OutlinedCard(
+    ElevatedCard(
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 6.dp
+        ),
         modifier = modifier
-            .shadow(4.dp)
+            .fillMaxWidth()
+            .heightIn(min = 300.dp)
     ) {
         Column(
-            modifier = modifier
+            modifier = Modifier
         ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(8.dp)
+                    .padding(16.dp)
             ) {
                 Image(
                     painter = painterResource(imgUser),
@@ -57,7 +61,7 @@ fun CardPosting(
                         .clip(CircleShape)
                 )
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Text(
                         text = username,
@@ -83,21 +87,26 @@ fun CardPosting(
                     .height(216.dp)
             )
 
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
+            Column(
                 modifier = modifier
-                    .fillMaxWidth()
-                    .padding(start = 8.dp, top = 8.dp)
-            )
-            Text(
-                text = description,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = modifier
-                    .padding(8.dp)
-            )
+                    .padding(16.dp)
+            ) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    modifier = modifier
+                )
+                Text(
+                    text = description,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = modifier
+                        .padding(top = 8.dp)
+                )
+
+            }
+
         }
     }
 }
