@@ -1,5 +1,4 @@
 <resources>
-    //OnBoarding
     <string name="app_name">Fishery</string>
     <string name="welcome">Selamat Datang di</string>
     <string name="welcome1">Tingkatkan produktivitas usaha perikanan Anda!</string>
