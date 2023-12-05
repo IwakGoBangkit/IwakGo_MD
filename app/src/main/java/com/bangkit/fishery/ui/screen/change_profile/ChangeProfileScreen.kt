@@ -1,6 +1,5 @@
 package com.bangkit.fishery.ui.screen.change_profile
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,19 +21,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.bangkit.fishery.R
+import com.bangkit.fishery.ui.screen.authentication.model.UserData
 
 @Composable
-fun ChangeProfileScreen() {
-    ChangeProfileContent()
+fun ChangeProfileScreen(
+    user: UserData?
+) {
+    ChangeProfileContent(
+        user = user
+    )
 }
 
 @Composable
 fun ChangeProfileContent(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    user: UserData?
 ) {
 
     var name by remember {
@@ -47,10 +52,10 @@ fun ChangeProfileContent(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Image(
-            painter = painterResource(R.drawable.boarding),
+        AsyncImage(
+            model = user?.photoUrl,
             contentDescription = null,
-            contentScale = ContentScale.Fit,
+            contentScale = ContentScale.Crop,
             modifier = modifier
                 .fillMaxWidth()
                 .size(328.dp)
@@ -67,9 +72,8 @@ fun ChangeProfileContent(
         }
 
         OutlinedTextField(
-            value = name,
+            value = user?.username ?: "",
             onValueChange = { newName -> name = newName },
-            placeholder = { Text(text = stringResource(R.string.name_user)) },
             label = { Text(text = stringResource(R.string.username)) },
             keyboardOptions = KeyboardOptions.Default,
             shape = RoundedCornerShape(24.dp),

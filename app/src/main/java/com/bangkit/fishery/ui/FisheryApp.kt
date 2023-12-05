@@ -26,6 +26,7 @@ import com.bangkit.fishery.ui.navigation.Screen
 import com.bangkit.fishery.ui.navigation.bottomNav.BottomNavItem
 import com.bangkit.fishery.ui.screen.add_post.AddPostScreen
 import com.bangkit.fishery.ui.screen.authentication.login.LoginScreen
+import com.bangkit.fishery.ui.screen.authentication.model.UserData
 import com.bangkit.fishery.ui.screen.authentication.register.RegisterScreen
 import com.bangkit.fishery.ui.screen.boarding.OnBoardingScreen
 import com.bangkit.fishery.ui.screen.change_email.ChangeEmailScreen
@@ -116,7 +117,11 @@ fun FisheryApp(
                         }
                     },
                     moveToHome = {
-                        navController.navigate(Screen.Home.route)
+                        navController.navigate(Screen.Home.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                inclusive = true
+                            }
+                        }
                     }
                 )
             }
@@ -142,7 +147,7 @@ fun FisheryApp(
                     },
                     onImageSelected = {
                         navController.currentBackStackEntry?.savedStateHandle?.set(
-                            "result", it
+                            "imageCaptured", it
                         )
                         navController.navigate(Screen.FishScan.route)
                     }
@@ -150,7 +155,8 @@ fun FisheryApp(
             }
 
             composable(Screen.FishScan.route) {
-                val imageResult = navController.previousBackStackEntry?.savedStateHandle?.get<ImageResult>("result")
+                val imageResult =
+                    navController.previousBackStackEntry?.savedStateHandle?.get<ImageResult>("imageCaptured")
                 ScanFishScreen(
                     image = imageResult
                 )
@@ -160,7 +166,7 @@ fun FisheryApp(
             composable(
                 Screen.FishItem.route,
                 arguments = listOf(
-                    navArgument("fishName") { type = NavType.StringType},
+                    navArgument("fishName") { type = NavType.StringType },
                 )
             ) {
                 val fish = it.arguments?.getString("fishName") ?: ""
@@ -188,30 +194,38 @@ fun FisheryApp(
                         fish = fishName,
                         id = id,
                         moveToDetailContent = { fish, idMenu, idCultivation ->
-                            navController.navigate(Screen.CultivationMenuDetail.createRoute(fish, idMenu, idCultivation))
+                            navController.navigate(
+                                Screen.CultivationMenuDetail.createRoute(
+                                    fish,
+                                    idMenu,
+                                    idCultivation
+                                )
+                            )
                         }
                     )
+
                     "feed" -> FeedRecommendationScreen(
                         fish = fishName
                     )
+
                     "disease" -> FishDiseaseScreen(
                         fish = fishName
                     )
                 }
             }
-            
+
             composable(
                 Screen.CultivationMenuDetail.route,
                 arguments = listOf(
                     navArgument("fishName") { type = NavType.StringType },
                     navArgument("idMenu") { type = NavType.StringType },
-                    navArgument("idCultivation") { type = NavType.StringType}
-                ) 
+                    navArgument("idCultivation") { type = NavType.StringType }
+                )
             ) {
-                
+
                 val idCultivation = it.arguments?.getString("idCultivation") ?: ""
                 val fish = it.arguments?.getString("fishName") ?: ""
-                
+
                 when (idCultivation) {
                     "pool" -> PoolSelectionScreen(fish = fish)
                     "seed" -> SeedSelectionScreen(fish = fish)
@@ -234,7 +248,7 @@ fun FisheryApp(
             composable(
                 Screen.DetailPost.route,
                 arguments = listOf(
-                    navArgument("idPost") { type = NavType.StringType}
+                    navArgument("idPost") { type = NavType.StringType }
                 )
             ) {
                 val idPost = it.arguments?.getString("idPost") ?: ""
@@ -247,7 +261,10 @@ fun FisheryApp(
 
             composable(Screen.Profile.route) {
                 ProfileScreen(
-                    moveToEdit = { title ->
+                    moveToEdit = { title, user ->
+                        navController.currentBackStackEntry?.savedStateHandle?.set(
+                            "userData", user
+                        )
                         when (title) {
                             "edit_profile" -> navController.navigate(Screen.ChangeProfile.route)
                             "edit_email" -> navController.navigate(Screen.ChangeEmail.route)
@@ -259,11 +276,13 @@ fun FisheryApp(
             }
 
             composable(Screen.ChangeProfile.route) {
-                ChangeProfileScreen()
+                val user = navController.previousBackStackEntry?.savedStateHandle?.get<UserData?>("userData")
+                ChangeProfileScreen(user)
             }
 
             composable(Screen.ChangeEmail.route) {
-                ChangeEmailScreen()
+                val user = navController.previousBackStackEntry?.savedStateHandle?.get<UserData?>("userData")
+                ChangeEmailScreen(user)
             }
 
             composable(Screen.ChangePassword.route) {

@@ -21,16 +21,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.bangkit.fishery.R
 import com.bangkit.fishery.ui.components.SectionText
+import com.bangkit.fishery.ui.screen.authentication.model.UserData
 
 @Composable
 fun ChangeEmailScreen(
+    user : UserData?
 ) {
-    ChangeEmailContent()
+    ChangeEmailContent(
+        user = user
+    )
 }
 
 @Composable
 fun ChangeEmailContent(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    user: UserData?
 ) {
 
     var email by remember {
@@ -49,9 +54,8 @@ fun ChangeEmailContent(
         )
 
         OutlinedTextField(
-            value = email,
+            value = user?.email ?: "",
             onValueChange = { newEmail -> email = newEmail },
-            placeholder = { Text(text = stringResource(R.string.email_user)) },
             label = { Text(text = stringResource(R.string.email)) },
             keyboardOptions = KeyboardOptions.Default,
             shape = RoundedCornerShape(24.dp),
