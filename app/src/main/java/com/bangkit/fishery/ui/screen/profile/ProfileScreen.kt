@@ -26,7 +26,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -105,7 +104,7 @@ fun ProfileContent(
             modifier = modifier
                 .fillMaxSize()
                 .background(
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.background,
                     shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
                 )
         ) {
@@ -123,7 +122,10 @@ fun UserProfile(
     modifier: Modifier = Modifier,
     userData: UserData?,
 ) {
-    Column {
+    Column(
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.primary)
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
@@ -139,16 +141,19 @@ fun UserProfile(
             )
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = modifier.fillMaxWidth()
+                modifier = modifier
+                    .fillMaxWidth()
             ) {
                 Text(
                     text = userData?.username ?: "",
-                    style = MaterialTheme.typography.headlineSmall
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.background
                 )
                 Spacer(modifier = modifier.size(8.dp))
                 Text(
                     text = userData?.email ?: "",
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.background
                 )
             }
         }

@@ -22,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -74,13 +73,17 @@ fun OnBoardingContent(
         Text(
             stringResource(R.string.welcome),
             fontSize = 24.sp,
-            modifier = modifier.padding(start = 16.dp, top = 16.dp)
+            modifier = modifier.padding(start = 16.dp, top = 16.dp),
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.background,
         )
 
         Text(
             stringResource(R.string.app_name),
             fontSize = 40.sp,
-            modifier = modifier.padding(top = 8.dp, start = 16.dp)
+            modifier = modifier.padding(top = 8.dp, start = 16.dp),
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.background,
         )
 
         Image(
@@ -95,7 +98,7 @@ fun OnBoardingContent(
         Box(
             modifier = modifier
                 .background(
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.background,
                     shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
                 )
                 .padding(top = 16.dp)
@@ -105,7 +108,7 @@ fun OnBoardingContent(
             ) {
                 Text(
                     stringResource(R.string.welcome1),
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onBackground,
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp,
                     textAlign = TextAlign.Justify
@@ -113,7 +116,7 @@ fun OnBoardingContent(
 
                 Text(
                     stringResource(R.string.welcome2),
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
                     fontStyle = FontStyle.Italic,
@@ -122,7 +125,7 @@ fun OnBoardingContent(
 
                 Text(
                     stringResource(R.string.welcome3),
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onBackground,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
                     modifier = modifier.padding(top = 16.dp)
