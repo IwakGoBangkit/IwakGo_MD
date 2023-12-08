@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -110,14 +112,21 @@ fun RegisterContent(
         mutableStateOf(false)
     }
 
+    var passwordConfirmationVisibility by remember {
+        mutableStateOf(false)
+    }
+
     var isPasswordMatching by remember {
         mutableStateOf(true)
     }
+
+    val scrollState = rememberScrollState()
 
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(top = 104.dp, start = 24.dp, end = 24.dp)
+            .verticalScroll(scrollState),
     ) {
 
         Text(
@@ -193,7 +202,18 @@ fun RegisterContent(
                 isPasswordMatching = it == password
             },
             label = { Text(stringResource(R.string.confirmation_password)) },
+            trailingIcon = {
+                IconButton(onClick = { passwordConfirmationVisibility = !passwordConfirmationVisibility }) {
+                    Icon(
+                        painter = if (passwordConfirmationVisibility) painterResource(R.drawable.ic_hide_password) else painterResource(
+                            R.drawable.ic_show_password
+                        ),
+                        contentDescription = null
+                    )
+                }
+            },
             keyboardOptions = KeyboardOptions.Default,
+            visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
             shape = RoundedCornerShape(24.dp),
             isError = !isPasswordMatching,
             modifier = modifier
