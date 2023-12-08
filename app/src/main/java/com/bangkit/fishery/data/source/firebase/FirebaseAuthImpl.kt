@@ -17,11 +17,13 @@ class FirebaseAuthImpl @Inject constructor(
     private val onTapClient: SignInClient
 ) : FirebaseAuth {
 
+    val firebase = Firebase.auth
+
     override suspend fun loginWithIntent(intent: Intent): UserModel {
         val credential = onTapClient.getSignInCredentialFromIntent(intent)
         val googleIdToken = credential.googleIdToken
         val googleCredential = GoogleAuthProvider.getCredential(googleIdToken, null)
-        val task = Firebase.auth.signInWithCredential(googleCredential).await()
+        val task = firebase.signInWithCredential(googleCredential).await()
         val user = task.user
         return UserModel(
             data = user?.run {
@@ -37,7 +39,7 @@ class FirebaseAuthImpl @Inject constructor(
     }
 
     override suspend fun loginWithEmail(email: String, password: String): UserModel {
-        val task = Firebase.auth.signInWithEmailAndPassword(email, password).await()
+        val task = firebase.signInWithEmailAndPassword(email, password).await()
         val user = task.user
         return UserModel(
             data = user?.run {
@@ -57,7 +59,7 @@ class FirebaseAuthImpl @Inject constructor(
         email: String,
         password: String
     ): UserModel {
-        val task = Firebase.auth.createUserWithEmailAndPassword(email, password).await()
+        val task = firebase.createUserWithEmailAndPassword(email, password).await()
         val user = task.user
         val profileUpdate = userProfileChangeRequest {
             displayName = name
@@ -76,7 +78,7 @@ class FirebaseAuthImpl @Inject constructor(
         )
     }
 
-    override suspend fun getLoggedUser(): UserData? = Firebase.auth.currentUser?.run {
+    override suspend fun getLoggedUser(): UserData? = firebase.currentUser?.run {
         UserData(
             userId = uid,
             username = displayName,
@@ -85,15 +87,13 @@ class FirebaseAuthImpl @Inject constructor(
         )
     }
 
-
-
     override suspend fun signOut() {
         onTapClient.signOut().await()
         Firebase.auth.signOut()
     }
 
     override suspend fun resetPassword(email: String): Boolean {
-        Firebase.auth.sendPasswordResetEmail(email).await()
+        firebase.sendPasswordResetEmail(email).await()
         return true
     }
 }
