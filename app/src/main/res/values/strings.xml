@@ -24,6 +24,11 @@
     <string name="have_not_account">Belum punya akun?</string>
     <string name="have_account">Sudah punya akun?</string>
 
+    <string name="forgot_password_title">Lupa Kata Sandi?</string>
+    <string name="forgot_password_desc">Masukkan email Anda untuk mengatur ulang kata sandi</string>
+    <string name="send_email">Kirim Email</string>
+    <string name="remember_password">Ingat kata sandi?</string>
+
     <string name="fill_credential">Lengkapi Biodata Anda</string>
     <string name="agreement_terms_condition">Dengan mengisi formulir ini, Anda menyetujui syarat dan ketentuan yang berlaku</string>
 
