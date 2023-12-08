@@ -56,4 +56,15 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun signOut() {
         firebaseAuth.signOut()
     }
+
+    override fun resetPassword(email: String) = flow {
+        emit(Result.Loading())
+        try {
+            val result = firebaseAuth.resetPassword(email)
+            emit(Result.Success(result))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emit(Result.Error(e.message))
+        }
+    }.flowOn(Dispatchers.IO)
 }

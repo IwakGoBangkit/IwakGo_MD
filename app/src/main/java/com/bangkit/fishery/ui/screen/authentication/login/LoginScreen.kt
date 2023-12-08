@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -54,6 +53,7 @@ fun LoginScreen(
     modifier: Modifier = Modifier,
     moveToRegister: () -> Unit,
     moveToHome: () -> Unit,
+    moveToForgetPass: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -95,6 +95,7 @@ fun LoginScreen(
             viewModel.onEvent(LoginEvent.LoginWithEmailPassword(state.email, state.password))
         },
         moveToRegister = moveToRegister,
+        moveToForgetPass = moveToForgetPass,
         modifier = modifier
     )
 
@@ -119,6 +120,7 @@ fun LoginContent(
     onLoginWithGoogle: () -> Unit,
     moveToRegister: () -> Unit,
     loggedIn: () -> Unit,
+    moveToForgetPass: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -186,7 +188,7 @@ fun LoginContent(
         )
 
         TextButton(
-            onClick = { /*TODO*/ },
+            onClick = moveToForgetPass,
             modifier = modifier
                 .align(Alignment.End)
                 .padding(top = 8.dp)
@@ -244,4 +246,3 @@ fun LoginContent(
         }
     }
 }
-

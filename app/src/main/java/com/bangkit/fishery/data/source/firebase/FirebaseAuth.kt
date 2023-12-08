@@ -10,4 +10,5 @@ interface FirebaseAuth {
     suspend fun registerWithEmail(name: String, email: String, password: String): UserModel
     suspend fun getLoggedUser(): UserData?
     suspend fun signOut()
+    suspend fun resetPassword(email: String): Boolean
 }

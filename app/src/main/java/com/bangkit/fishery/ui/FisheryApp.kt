@@ -25,6 +25,7 @@ import com.bangkit.fishery.R
 import com.bangkit.fishery.ui.navigation.Screen
 import com.bangkit.fishery.ui.navigation.bottomNav.BottomNavItem
 import com.bangkit.fishery.ui.screen.add_post.AddPostScreen
+import com.bangkit.fishery.ui.screen.authentication.forget_password.ForgetPasswordScreen
 import com.bangkit.fishery.ui.screen.authentication.login.LoginScreen
 import com.bangkit.fishery.ui.screen.authentication.model.UserData
 import com.bangkit.fishery.ui.screen.authentication.register.RegisterScreen
@@ -122,12 +123,29 @@ fun FisheryApp(
                                 inclusive = true
                             }
                         }
-                    }
+                    },
+                    moveToForgetPass = {
+                        navController.navigate(Screen.ForgotPassword.route)
+                    },
                 )
             }
 
             composable(Screen.Register.route) {
                 RegisterScreen(
+                    moveToLogin = {
+                        navController.navigate(Screen.Login.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                )
+            }
+
+            composable(Screen.ForgotPassword.route) {
+                ForgetPasswordScreen(
                     moveToLogin = {
                         navController.navigate(Screen.Login.route) {
                             popUpTo(navController.graph.findStartDestination().id) {

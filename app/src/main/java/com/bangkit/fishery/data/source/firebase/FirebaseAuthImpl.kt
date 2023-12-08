@@ -91,4 +91,9 @@ class FirebaseAuthImpl @Inject constructor(
         onTapClient.signOut().await()
         Firebase.auth.signOut()
     }
+
+    override suspend fun resetPassword(email: String): Boolean {
+        Firebase.auth.sendPasswordResetEmail(email).await()
+        return true
+    }
 }

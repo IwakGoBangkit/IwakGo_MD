@@ -13,4 +13,6 @@ interface AuthRepository {
 
     fun getLoggedUser(): Flow<UserData?>
     suspend fun signOut()
+
+    fun resetPassword(email: String): Flow<Result<Boolean>>
 }
