@@ -72,6 +72,7 @@
 
     <string name="name_user">Ahmad Khusnudin</string>
     <string name="email_user">ahmadkhusnudin@gmail.com</string>
+    <string name="photo_default">https://ibb.co/pZy0gZn</string>
     <string name="account">Akun</string>
     <string name="change_profile">Ubah Profil</string>
     <string name="change_email">Ubah Email</string>
