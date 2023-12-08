@@ -1,44 +1,43 @@
 {
   "project_info": {
-    "project_number": "744018463918",
-    "project_id": "fishery-app-12659",
-    "storage_bucket": "fishery-app-12659.appspot.com"
+    "project_number": "498833271569",
+    "project_id": "ch2-ps246",
+    "storage_bucket": "ch2-ps246.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:744018463918:android:767bdbffa82bf17e02713f",
+        "mobilesdk_app_id": "1:498833271569:android:908b6ab4be19e3bae67ab0",
         "android_client_info": {
-          "package_name": "com.bangkit.fishery"
+          "package_name": "com.bangkit.fishery_app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "744018463918-i4tr03d78qbnks8a3uttbi07sfkmutj6.apps.googleusercontent.com",
+          "client_id": "498833271569-0ktpv2csr4gj56274jc6sr7q0eppqn82.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.bangkit.fishery",
+            "package_name": "com.bangkit.fishery_app",
             "certificate_hash": "d5edd8e1ade5775b7dab7ef81ffbaf6f5993a909"
           }
         },
         {
-          "client_id": "744018463918-ne7umrmvtee6419baa3ocd3abvkh1ui1.apps.googleusercontent.com",
-          "client_type": 3
+          "client_id": "498833271569-edcig7en8epqb46hk2jodtulp6u6n5m2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bangkit.fishery_app",
+            "certificate_hash": "e14a6c74fdab414ddd5e55ba4726ddc9fd579a31"
+          }
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCE99NKN16GxZz3nt5Ksvmw2p33YbGcGMc"
+          "current_key": "AIzaSyBBNEYMLxhWCpMvrnhNeBOPmpHyHqd-DnE"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "744018463918-ne7umrmvtee6419baa3ocd3abvkh1ui1.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }
