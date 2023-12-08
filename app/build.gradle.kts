@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace = "com.bangkit.fishery"
+    namespace = "com.bangkit.fishery_app"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.bangkit.fishery"
+        applicationId = "com.bangkit.fishery_app"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
