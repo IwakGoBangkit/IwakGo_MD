@@ -1,8 +1,10 @@
 package com.bangkit.fishery_app.ui.screen.authentication.forget_password
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -66,63 +68,66 @@ fun ForgetPasswordContent(
         mutableStateOf(true)
     }
 
-    Column(
+    Box(
         modifier = modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .padding(top = 104.dp, start = 24.dp, end = 24.dp),
     ) {
-
-        Text(
-            text = stringResource(id = R.string.forgot_password_title),
-            style = MaterialTheme.typography.headlineLarge,
-            fontWeight = FontWeight.Bold
-        )
-
-        Text(
-            text = stringResource(id = R.string.forgot_password_desc),
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = modifier.padding(top = 16.dp)
-        )
-
-        OutlinedTextField(
-            value = email,
-            onValueChange = {
-                onEmailChanged(it)
-                isEmailValid = emailValidation(it)
-            },
-            modifier = modifier
-                .padding(top = 16.dp)
-                .fillMaxWidth(),
-            label = {
-                Text(text = stringResource(id = R.string.email))
-            },
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Email
-            ),
-            shape = RoundedCornerShape(24.dp),
-            isError = !isEmailValid,
-        )
-
-        if (!isEmailValid) {
-            Text(
-                text = stringResource(id = R.string.invalid_email),
-                color = MaterialTheme.colorScheme.error
-            )
-        }
-
-        Button(
-            onClick = onResetPassword,
-            modifier = modifier
-                .padding(top = 32.dp)
-                .fillMaxWidth(),
-        ) {
-            Text(text = stringResource(id = R.string.send_email))
-        }
-
-        Row(
+        Column(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(top = 200.dp),
+        ) {
+
+            Text(
+                text = stringResource(id = R.string.forgot_password_title),
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold
+            )
+
+            Text(
+                text = stringResource(id = R.string.forgot_password_desc),
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = modifier.padding(top = 16.dp)
+            )
+
+            OutlinedTextField(
+                value = email,
+                onValueChange = {
+                    onEmailChanged(it)
+                    isEmailValid = emailValidation(it)
+                },
+                modifier = modifier
+                    .padding(top = 16.dp)
+                    .fillMaxWidth(),
+                label = {
+                    Text(text = stringResource(id = R.string.email))
+                },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Email
+                ),
+                shape = RoundedCornerShape(24.dp),
+                isError = !isEmailValid,
+            )
+
+            if (!isEmailValid) {
+                Text(
+                    text = stringResource(id = R.string.invalid_email),
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+
+            Button(
+                onClick = onResetPassword,
+                modifier = modifier
+                    .padding(top = 32.dp)
+                    .fillMaxWidth(),
+            ) {
+                Text(text = stringResource(id = R.string.send_email))
+            }
+        }
+        Row(
+            modifier = modifier
+                .align(Alignment.BottomCenter),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
@@ -139,6 +144,4 @@ fun ForgetPasswordContent(
             }
         }
     }
-
-
 }

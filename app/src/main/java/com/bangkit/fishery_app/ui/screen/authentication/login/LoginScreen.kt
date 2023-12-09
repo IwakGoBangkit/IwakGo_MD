@@ -5,8 +5,10 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -132,122 +134,128 @@ fun LoginContent(
         mutableStateOf(false)
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
+    Box(
+        modifier = modifier.fillMaxSize()
             .padding(top = 104.dp, start = 24.dp, end = 24.dp),
     ) {
-
-        Text(
-            stringResource(R.string.login),
-            style = MaterialTheme.typography.headlineLarge,
-            fontWeight = FontWeight.ExtraBold
-        )
-
-        OutlinedTextField(
-            value = email,
-            onValueChange = {
-                onEmailChanged(it)
-                isEmailValid = emailValidation(it)
-            },
+        Column(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp),
-            label = { Text(stringResource(R.string.email)) },
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Email
-            ),
-            shape = RoundedCornerShape(24.dp),
-            isError = !isEmailValid,
-        )
-
-        if (!isEmailValid) {
-            Text(stringResource(R.string.invalid_email), color = Color.Red)
-        }
-
-        OutlinedTextField(
-            value = password,
-            onValueChange = { onPasswordChanged(it) },
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
-            label = { Text(stringResource(R.string.password)) },
-            trailingIcon = {
-                IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
-                    Icon(
-                        painter = if (passwordVisibility) painterResource(R.drawable.ic_hide_password) else painterResource(
-                            R.drawable.ic_show_password
-                        ),
-                        contentDescription = null
-                    )
-                }
-            },
-            keyboardOptions = KeyboardOptions.Default,
-            visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
-            shape = RoundedCornerShape(24.dp)
-        )
-
-        TextButton(
-            onClick = moveToForgetPass,
-            modifier = modifier
-                .align(Alignment.End)
-                .padding(top = 8.dp)
         ) {
+
             Text(
-                text = stringResource(R.string.forgot_password)
+                stringResource(R.string.login),
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.ExtraBold
             )
-        }
 
-        Button(
-            onClick = {
-                      if (email.isNotEmpty() && password.isNotEmpty()) {
-                          loggedIn()
-                      } else {
-
-                      }
-            },
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(top = 24.dp)
-        ) {
-            Text(stringResource(R.string.login))
-        }
-
-        Text(
-            stringResource(R.string.or),
-            modifier = modifier
-                .align(CenterHorizontally)
-                .padding(top = 32.dp)
-        )
-
-        OutlinedButton(
-            onClick = onLoginWithGoogle,
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(top = 32.dp)
-        ) {
-            Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.ic_google),
-                contentDescription = null,
-                modifier = modifier.padding(end = 8.dp)
+            OutlinedTextField(
+                value = email,
+                onValueChange = {
+                    onEmailChanged(it)
+                    isEmailValid = emailValidation(it)
+                },
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                label = { Text(stringResource(R.string.email)) },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Email
+                ),
+                shape = RoundedCornerShape(24.dp),
+                isError = !isEmailValid,
             )
-            Text(stringResource(R.string.login_with_google))
-        }
 
+            if (!isEmailValid) {
+                Text(stringResource(R.string.invalid_email), color = Color.Red)
+            }
+
+            OutlinedTextField(
+                value = password,
+                onValueChange = { onPasswordChanged(it) },
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                label = { Text(stringResource(R.string.password)) },
+                trailingIcon = {
+                    IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
+                        Icon(
+                            painter = if (passwordVisibility) painterResource(R.drawable.ic_hide_password) else painterResource(
+                                R.drawable.ic_show_password
+                            ),
+                            contentDescription = null
+                        )
+                    }
+                },
+                keyboardOptions = KeyboardOptions.Default,
+                visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+                shape = RoundedCornerShape(24.dp)
+            )
+
+            TextButton(
+                onClick = moveToForgetPass,
+                modifier = modifier
+                    .align(Alignment.End)
+                    .padding(top = 8.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.forgot_password)
+                )
+            }
+
+            Button(
+                onClick = {
+                    if (email.isNotEmpty() && password.isNotEmpty()) {
+                        loggedIn()
+                    } else {
+
+                    }
+                },
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(top = 24.dp)
+            ) {
+                Text(stringResource(R.string.login))
+            }
+
+            Text(
+                stringResource(R.string.or),
+                modifier = modifier
+                    .align(CenterHorizontally)
+                    .padding(top = 32.dp)
+            )
+
+            OutlinedButton(
+                onClick = onLoginWithGoogle,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(top = 32.dp)
+            ) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_google),
+                    contentDescription = null,
+                    modifier = modifier.padding(end = 8.dp)
+                )
+                Text(stringResource(R.string.login_with_google))
+            }
+        }
         Row(
             modifier = modifier
-                .fillMaxWidth()
-                .padding(top = 144.dp),
+                .align(Alignment.BottomCenter),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
                 stringResource(R.string.have_not_account),
+                style = MaterialTheme.typography.bodyMedium,
             )
             TextButton(
                 onClick = moveToRegister,
             ) {
-                Text(stringResource(R.string.register))
+                Text(
+                    stringResource(R.string.register),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
             }
         }
     }
