@@ -244,7 +244,7 @@ fun RegisterContent(
                         }
                     },
                     keyboardOptions = KeyboardOptions.Default,
-                    visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+                    visualTransformation = if (passwordConfirmationVisibility) VisualTransformation.None else PasswordVisualTransformation(),
                     shape = RoundedCornerShape(24.dp),
                     isError = !isPasswordMatching,
                     modifier = modifier
