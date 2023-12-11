@@ -7,6 +7,8 @@ import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.userProfileChangeRequest
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.toObject
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -17,14 +19,25 @@ class FirebaseAuthImpl @Inject constructor(
     private val onTapClient: SignInClient
 ) : FirebaseAuth {
 
-    val firebase = Firebase.auth
+    private val auth = Firebase.auth
+    private val firestore = Firebase.firestore
 
     override suspend fun loginWithIntent(intent: Intent): UserModel {
         val credential = onTapClient.getSignInCredentialFromIntent(intent)
         val googleIdToken = credential.googleIdToken
         val googleCredential = GoogleAuthProvider.getCredential(googleIdToken, null)
-        val task = firebase.signInWithCredential(googleCredential).await()
+        val task = auth.signInWithCredential(googleCredential).await()
         val user = task.user
+
+        firestore.collection("users").document(user?.uid.toString()).set(
+            UserData(
+                userId = user?.uid.toString(),
+                username = user?.displayName,
+                email = user?.email,
+                photoUrl = user?.photoUrl.toString()
+            )
+        ).await()
+
         return UserModel(
             data = user?.run {
                 UserData(
@@ -39,7 +52,7 @@ class FirebaseAuthImpl @Inject constructor(
     }
 
     override suspend fun loginWithEmail(email: String, password: String): UserModel {
-        val task = firebase.signInWithEmailAndPassword(email, password).await()
+        val task = auth.signInWithEmailAndPassword(email, password).await()
         val user = task.user
         return UserModel(
             data = user?.run {
@@ -59,32 +72,42 @@ class FirebaseAuthImpl @Inject constructor(
         email: String,
         password: String
     ): UserModel {
-        val task = firebase.createUserWithEmailAndPassword(email, password).await()
+        val task = auth.createUserWithEmailAndPassword(email, password).await()
         val user = task.user
         val profileUpdate = userProfileChangeRequest {
             displayName = name
         }
         Firebase.auth.currentUser?.updateProfile(profileUpdate)?.await()
+
+        val defaultPhoto = "https://ibb.co/DpJfxKX"
+        firestore.collection("users").document(auth.currentUser?.uid.toString()).set(
+            UserData(
+                userId = auth.currentUser?.uid.toString(),
+                username = user?.displayName,
+                email = email,
+                photoUrl = defaultPhoto
+            )
+        ).await()
         return UserModel(
             data = user?.run {
                 UserData(
                     userId = uid,
                     username = displayName,
                     email = email,
-                    photoUrl = photoUrl?.toString()
+                    photoUrl = photoUrl.toString()
                 )
             },
             errorMessage = null
         )
     }
 
-    override suspend fun getLoggedUser(): UserData? = firebase.currentUser?.run {
-        UserData(
-            userId = uid,
-            username = displayName,
-            email = email,
-            photoUrl = photoUrl?.toString()
-        )
+    override suspend fun getLoggedUser(): UserData?  {
+        val userId = auth.currentUser?.uid
+        val result = firestore.collection("users")
+            .document("$userId")
+            .get()
+            .await()
+        return result.toObject<UserData>()
     }
 
     override suspend fun signOut() {
@@ -93,7 +116,7 @@ class FirebaseAuthImpl @Inject constructor(
     }
 
     override suspend fun resetPassword(email: String): Boolean {
-        firebase.sendPasswordResetEmail(email).await()
+        auth.sendPasswordResetEmail(email).await()
         return true
     }
 }
