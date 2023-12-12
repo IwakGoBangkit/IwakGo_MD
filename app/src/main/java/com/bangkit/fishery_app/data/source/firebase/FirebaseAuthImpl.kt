@@ -79,7 +79,7 @@ class FirebaseAuthImpl @Inject constructor(
         }
         Firebase.auth.currentUser?.updateProfile(profileUpdate)?.await()
 
-        val defaultPhoto = "https://ibb.co/DpJfxKX"
+        val defaultPhoto = "https://i.ibb.co/NSv28Yh/pngegg-6.png"
         firestore.collection("users").document(auth.currentUser?.uid.toString()).set(
             UserData(
                 userId = auth.currentUser?.uid.toString(),

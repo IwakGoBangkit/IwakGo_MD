@@ -70,6 +70,7 @@ dependencies {
     //FIREBASE
     implementation("com.google.firebase:firebase-auth:22.3.0")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
+    implementation("com.google.firebase:firebase-firestore:24.10.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
 
     //TESTING
