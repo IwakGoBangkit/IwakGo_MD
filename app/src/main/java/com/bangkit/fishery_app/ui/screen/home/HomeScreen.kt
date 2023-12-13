@@ -2,6 +2,7 @@ package com.bangkit.fishery_app.ui.screen.home
 
 import android.Manifest
 import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -25,6 +26,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,12 +37,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bangkit.fishery_app.BuildConfig
 import com.bangkit.fishery_app.R
+import com.bangkit.fishery_app.data.model.FishMenu
 import com.bangkit.fishery_app.ui.components.MenuFishItem
 import com.bangkit.fishery_app.ui.components.SectionText
 import com.bangkit.fishery_app.ui.screen.home.model.ImageResult
-import com.bangkit.fishery_app.util.DummyFishItem.fishItem
 import com.bangkit.fishery_app.util.createImageFile
 import com.bangkit.fishery_app.util.toFile
 import kotlinx.coroutines.launch
@@ -48,26 +52,32 @@ import java.io.File
 
 @Composable
 fun HomeScreen(
+    modifier: Modifier = Modifier,
     navigateToFishItem: (fishName: String) -> Unit,
     onImageSelected: (ImageResult) -> Unit,
-    modifier: Modifier = Modifier
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
     HomeContent(
+        modifier = modifier,
         navigateToFishItem = navigateToFishItem,
         onImageSelected = {
             onImageSelected(
                 ImageResult(it)
             )
         },
-        modifier = modifier
+        listFish = state.listFish
     )
+
 }
 
 @Composable
 fun HomeContent(
+    modifier: Modifier = Modifier,
     navigateToFishItem: (fishName: String) -> Unit,
     onImageSelected: (File) -> Unit,
-    modifier: Modifier = Modifier,
+    listFish: List<FishMenu>
 ) {
     Column(
         modifier = modifier.padding(top = 24.dp, start = 8.dp)
@@ -79,9 +89,10 @@ fun HomeContent(
             contentPadding = PaddingValues(horizontal = 16.dp),
             modifier = modifier
         ) {
-            items(fishItem, key = { it.id }) { fish ->
+            items(listFish, key = { it.id }) { fish ->
                 MenuFishItem(
-                    menuFishModel = fish,
+                    image = fish.image,
+                    title = fish.title,
                     modifier = modifier.clickable {
                         navigateToFishItem(fish.title)
                     }
