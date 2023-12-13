@@ -1,6 +1,8 @@
 package com.bangkit.fishery_app.ui.screen.add_post
 
-import androidx.compose.foundation.Image
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,9 +19,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -27,7 +27,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toFile
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.AsyncImage
 import com.bangkit.fishery_app.R
+import kotlinx.coroutines.launch
+import java.io.File
 
 @Composable
 fun AddPostScreen() {
@@ -36,27 +42,23 @@ fun AddPostScreen() {
 
 @Composable
 fun AddPostContent(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: AddPostViewModel = hiltViewModel()
 ) {
 
-    var title by remember {
-        mutableStateOf("")
-    }
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val scope = rememberCoroutineScope()
 
-    var location by remember {
-        mutableStateOf("")
-    }
+    var image: File? = null
 
-    var phone by remember {
-        mutableStateOf("")
-    }
-
-    var price by remember {
-        mutableStateOf("")
-    }
-
-    var description by remember {
-        mutableStateOf("")
+    val launcherPickPhoto = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { result ->
+        if (result != null) {
+            scope.launch {
+                image = result.toFile()
+            }
+        }
     }
 
     Column(
@@ -72,13 +74,17 @@ fun AddPostContent(
             ),
             modifier = modifier
                 .size(width = 328.dp, height = 280.dp)
-                .clickable {  }
+                .clickable {
+                    launcherPickPhoto.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
+                }
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Image(
-                    painter = painterResource(R.drawable.upload),
+                AsyncImage(
+                    model = if(image == null) painterResource(R.drawable.upload) else image,
                     contentDescription = stringResource(R.string.upload_image),
                     contentScale = ContentScale.Crop,
                     modifier = modifier.size(width = 328.dp, height = 224.dp)
@@ -92,8 +98,10 @@ fun AddPostContent(
             }
         }
         OutlinedTextField(
-            value = title,
-            onValueChange = { newTitle -> title = newTitle},
+            value = state.title,
+            onValueChange = { title ->
+                viewModel.onEvent(AddPostEvent.OnTitleChanged(title))
+            },
             label = { Text(stringResource(R.string.title)) },
             shape = RoundedCornerShape(24.dp),
             modifier = modifier
@@ -101,8 +109,10 @@ fun AddPostContent(
                 .padding(top = 16.dp)
         )
         OutlinedTextField(
-            value = location,
-            onValueChange = { newLocation -> location = newLocation},
+            value = state.location,
+            onValueChange = { location ->
+                viewModel.onEvent(AddPostEvent.OnLocationChanged(location))
+            },
             label = { Text(stringResource(R.string.location)) },
             shape = RoundedCornerShape(24.dp),
             modifier = modifier
@@ -110,8 +120,10 @@ fun AddPostContent(
                 .padding(top = 16.dp)
         )
         OutlinedTextField(
-            value = phone,
-            onValueChange = { newPhoneNumber -> phone = newPhoneNumber },
+            value = state.phoneNumber,
+            onValueChange = { phoneNumber ->
+                viewModel.onEvent(AddPostEvent.OnPhoneNumberChanged(phoneNumber))
+            },
             label = { Text(stringResource(R.string.phone)) },
             shape = RoundedCornerShape(24.dp),
             modifier = modifier
@@ -119,8 +131,10 @@ fun AddPostContent(
                 .padding(top = 16.dp)
         )
         OutlinedTextField(
-            value = price,
-            onValueChange = { newPrice -> price = newPrice},
+            value = state.price,
+            onValueChange = { price ->
+                viewModel.onEvent(AddPostEvent.OnPriceChanged(price))
+            },
             label = { Text(stringResource(R.string.price)) },
             shape = RoundedCornerShape(24.dp),
             modifier = modifier
@@ -128,8 +142,10 @@ fun AddPostContent(
                 .padding(top = 16.dp)
         )
         OutlinedTextField(
-            value = description,
-            onValueChange = { newDescription -> description = newDescription},
+            value = state.description,
+            onValueChange = { description ->
+                viewModel.onEvent(AddPostEvent.OnDescriptionChanged(description))
+            },
             label = { Text(stringResource(R.string.description)) },
             shape = RoundedCornerShape(24.dp),
             modifier = modifier

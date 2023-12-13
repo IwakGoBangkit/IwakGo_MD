@@ -22,12 +22,12 @@ sealed class Screen(val route: String) {
             "home/$fishName/$idMenu/$idCultivation"
     }
 
-    object ScanPreview : Screen("home/camera/preview")
+    object ScanResult : Screen("home/scan/result")
 
     object Market : Screen("market")
 
     object DetailPost : Screen("market/{idPost}/detail") {
-        fun createRoute(idPost: String) = "market/$idPost/detail"
+        fun createRoute(idPost: Int) = "market/$idPost/detail"
     }
 
     object AddPost : Screen("market/addPost")

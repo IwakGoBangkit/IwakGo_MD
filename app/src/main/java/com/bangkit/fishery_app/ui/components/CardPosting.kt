@@ -24,13 +24,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import com.bangkit.fishery_app.util.DateHelper
 
 @Composable
 fun CardPosting(
     username: String,
-    imgUser: Int,
+    imgUser: String,
     date: String,
-    imagePost: Int,
+    imagePost: String,
     title: String,
     description: String,
     modifier: Modifier = Modifier
@@ -52,8 +54,8 @@ fun CardPosting(
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                Image(
-                    painter = painterResource(imgUser),
+                AsyncImage(
+                    model = imgUser,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = modifier
@@ -78,8 +80,8 @@ fun CardPosting(
                 }
             }
 
-            Image(
-                painter = painterResource(imagePost),
+            AsyncImage(
+                model = imagePost,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = modifier
