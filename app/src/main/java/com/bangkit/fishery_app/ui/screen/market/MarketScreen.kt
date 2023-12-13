@@ -20,23 +20,29 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bangkit.fishery_app.R
+import com.bangkit.fishery_app.data.model.PostModel
 import com.bangkit.fishery_app.ui.components.CardPosting
-import com.bangkit.fishery_app.util.DummyPostUser.postUser
 
 @Composable
 fun MarketScreen(
-    moveToDetailPost: (idPost: String) -> Unit,
+    moveToDetailPost: (idPost: Int) -> Unit,
     moveAddPost: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: MarketViewModel = hiltViewModel()
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
     MarketContent(
         moveToDetailPost = moveToDetailPost,
         moveAddPost = moveAddPost,
+        listPost = state.listPosts,
         modifier = modifier
     )
 }
@@ -44,8 +50,9 @@ fun MarketScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MarketContent(
-    moveToDetailPost: (idPost: String) -> Unit,
+    moveToDetailPost: (idPost: Int) -> Unit,
     moveAddPost: () -> Unit,
+    listPost: List<PostModel>,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -97,7 +104,7 @@ fun MarketContent(
             contentPadding = PaddingValues(vertical = 8.dp),
             modifier = modifier.padding(top = 16.dp)
         ){
-            items(postUser, key = {it.idPost}) {post ->
+            items(listPost, key = {it.idPost}) {post ->
                 CardPosting(
                     username = post.username,
                     imgUser = post.userPhoto,

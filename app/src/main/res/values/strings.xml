@@ -47,6 +47,10 @@
     <string name="take_photo">Ambil Photo</string>
 
     <string name="gallery_permission">Izin akses ke penyimpanan diperlukan untuk membuka galeri.</string>
+    <string name="fish_type">Jenis Ikan</string>
+    <string name="fish_condition">Kondisi</string>
+    <string name="fish_treatment">Pengobatan</string>
+    <string name="back_to_home">Kembali ke Beranda</string>
 
     <string name="method_cultivation">Cara Budidaya</string>
     <string name="feed_recommendation">Rekomendasi Pakan</string>
@@ -67,12 +71,11 @@
     <string name="price">Harga</string>
     <string name="description">Deskripsi</string>
 
-    <string name="call">Hubungi</string>
+    <string name="buy">Beli</string>
     <string name="comment">Komentar</string>
 
     <string name="name_user">Ahmad Khusnudin</string>
     <string name="email_user">ahmadkhusnudin@gmail.com</string>
-    <string name="photo_default">https://ibb.co/pZy0gZn</string>
     <string name="account">Akun</string>
     <string name="change_profile">Ubah Profil</string>
     <string name="change_email">Ubah Email</string>

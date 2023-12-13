@@ -1,5 +1,8 @@
 package com.bangkit.fishery_app.ui.screen.change_profile
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.bangkit.fishery_app.R
 import com.bangkit.fishery_app.ui.screen.authentication.model.UserData
+import kotlinx.coroutines.launch
 
 @Composable
 fun ChangeProfileScreen(
@@ -42,6 +47,18 @@ fun ChangeProfileContent(
     user: UserData?
 ) {
 
+    val scope = rememberCoroutineScope()
+
+    val launcherPickPhoto = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+    ) { result ->
+        if (result != null) {
+            scope.launch {
+
+            }
+        }
+    }
+
     var name by remember {
         mutableStateOf("")
     }
@@ -57,13 +74,16 @@ fun ChangeProfileContent(
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = modifier
-                .fillMaxWidth()
-                .size(328.dp)
+                .size(240.dp)
                 .clip(CircleShape)
         )
 
         Button(
-            onClick = { /*TODO*/ },
+            onClick = {
+                launcherPickPhoto.launch(
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                )
+            },
             modifier = modifier.fillMaxWidth()
         ) {
             Text(
@@ -79,7 +99,7 @@ fun ChangeProfileContent(
             shape = RoundedCornerShape(24.dp),
             modifier = modifier.fillMaxWidth()
         )
-        
+
         Spacer(modifier = modifier.size(16.dp))
 
         Button(
