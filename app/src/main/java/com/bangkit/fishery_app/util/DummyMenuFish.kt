@@ -2,24 +2,25 @@ package com.bangkit.fishery_app.util
 
 import com.bangkit.fishery_app.R
 import com.bangkit.fishery_app.data.model.FishMenu
+import com.bangkit.fishery_app.ui.model.FishMenuDetail
 
 object DummyMenuFish {
 
     val fishMenu = listOf(
-        FishMenu (
+        FishMenuDetail(
             id = "cultivation",
             image = R.drawable.method_cultivation,
-            title = "Cara Budidaya"
+            title = "Cara Budidaya",
         ),
-        FishMenu (
+        FishMenuDetail(
             id = "feed",
             image = R.drawable.feed_recommendation,
-            title = "Rekomendasi Pakan"
+            title = "Rekomendasi Pakan",
         ),
-        FishMenu (
+        FishMenuDetail(
             id = "disease",
             image = R.drawable.fish_disease,
-            title = "Penyakit"
-        )
+            title = "Penyakit",
+        ),
     )
 }
