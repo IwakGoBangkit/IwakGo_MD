@@ -83,4 +83,8 @@
     <string name="save">Simpan</string>
 
     <string name="boarding_desc">Gambar Ikan</string>
+
+    <string name="confirm_logout">Apakah Anda yakin ingin keluar?</string>
+    <string name="yes">Ya</string>
+    <string name="no">Batal</string>
 </resources>

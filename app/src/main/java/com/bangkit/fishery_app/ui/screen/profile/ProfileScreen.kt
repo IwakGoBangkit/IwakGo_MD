@@ -23,6 +23,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,6 +38,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.bangkit.fishery_app.R
 import com.bangkit.fishery_app.ui.MainActivity
+import com.bangkit.fishery_app.ui.components.AlertDialogContent
 import com.bangkit.fishery_app.ui.components.IconButtonTextHorizontal
 import com.bangkit.fishery_app.ui.components.SectionText
 import com.bangkit.fishery_app.ui.screen.authentication.model.UserData
@@ -167,6 +170,9 @@ fun SettingButton(
     moveToEdit: (id: String, user: UserData?) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val dialogState = remember {
+        mutableStateOf(false)
+    }
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier.padding(8.dp)
@@ -198,7 +204,34 @@ fun SettingButton(
             title = stringResource(R.string.logout),
             modifier = modifier
                 .padding(start = 16.dp, end = 16.dp)
-                .clickable { onLogout() }
+                .clickable {
+                    dialogState.value = true
+                }
         )
+
+        if (dialogState.value) {
+            LogoutDialog(
+                onDismissRequest = {
+                    dialogState.value = false
+                },
+                onConfirmation = {
+                    dialogState.value = false
+                    onLogout()
+                }
+            )
+        }
     }
+}
+
+@Composable
+fun LogoutDialog(
+    onDismissRequest: () -> Unit,
+    onConfirmation: () -> Unit,
+) {
+    AlertDialogContent(
+        onDismissRequest = onDismissRequest,
+        onConfirmation = onConfirmation,
+        dialogTitle = stringResource(id = R.string.logout),
+        dialogMessage = stringResource(id = R.string.confirm_logout),
+    )
 }
