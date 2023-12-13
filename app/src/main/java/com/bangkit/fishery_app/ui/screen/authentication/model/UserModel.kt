@@ -10,8 +10,8 @@ data class UserModel(
 
 @Parcelize
 data class UserData(
-    val userId: String,
-    val username: String?,
-    val email: String?,
-    val photoUrl: String?
+    val userId: String = "",
+    val username: String? = "",
+    val email: String? = "",
+    val photoUrl: String? = ""
 ): Parcelable
