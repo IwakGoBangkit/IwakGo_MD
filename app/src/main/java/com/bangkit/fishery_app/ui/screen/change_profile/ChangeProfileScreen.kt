@@ -29,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.bangkit.fishery_app.R
+import com.bangkit.fishery_app.ui.components.SectionText
 import com.bangkit.fishery_app.ui.screen.authentication.model.UserData
 import kotlinx.coroutines.launch
 
@@ -64,51 +65,55 @@ fun ChangeProfileContent(
     }
 
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        AsyncImage(
-            model = user?.photoUrl,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = modifier
-                .size(240.dp)
-                .clip(CircleShape)
-        )
+        SectionText(title = stringResource(R.string.change_profile))
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            AsyncImage(
+                model = user?.photoUrl,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = modifier
+                    .size(240.dp)
+                    .clip(CircleShape)
+            )
 
-        Button(
-            onClick = {
-                launcherPickPhoto.launch(
-                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+            Button(
+                onClick = {
+                    launcherPickPhoto.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
+                },
+                modifier = modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = stringResource(R.string.upload_photo_profile)
                 )
-            },
-            modifier = modifier.fillMaxWidth()
-        ) {
-            Text(
-                text = stringResource(R.string.change_profile)
+            }
+
+            OutlinedTextField(
+                value = user?.username ?: "",
+                onValueChange = { newName -> name = newName },
+                label = { Text(text = stringResource(R.string.username)) },
+                keyboardOptions = KeyboardOptions.Default,
+                shape = RoundedCornerShape(24.dp),
+                modifier = modifier.fillMaxWidth()
             )
-        }
 
-        OutlinedTextField(
-            value = user?.username ?: "",
-            onValueChange = { newName -> name = newName },
-            label = { Text(text = stringResource(R.string.username)) },
-            keyboardOptions = KeyboardOptions.Default,
-            shape = RoundedCornerShape(24.dp),
-            modifier = modifier.fillMaxWidth()
-        )
+            Spacer(modifier = modifier.size(16.dp))
 
-        Spacer(modifier = modifier.size(16.dp))
-
-        Button(
-            onClick = { /*TODO*/ },
-            modifier = modifier.fillMaxWidth()
-        ) {
-            Text(
-                text = stringResource(R.string.save)
-            )
+            Button(
+                onClick = { /*TODO*/ },
+                modifier = modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = stringResource(R.string.save)
+                )
+            }
         }
     }
 }
