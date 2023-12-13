@@ -47,6 +47,7 @@ import com.bangkit.fishery_app.ui.screen.preservation.PreservationScreen
 import com.bangkit.fishery_app.ui.screen.privacy_safety.PrivacySafetyScreen
 import com.bangkit.fishery_app.ui.screen.profile.ProfileScreen
 import com.bangkit.fishery_app.ui.screen.scan_fish.ScanFishScreen
+import com.bangkit.fishery_app.ui.screen.scan_result.ScanResultScreen
 import com.bangkit.fishery_app.ui.screen.seed_selection.SeedSelectionScreen
 import com.bangkit.fishery_app.ui.screen.splash.SplashScreen
 
@@ -176,8 +177,26 @@ fun FisheryApp(
                 val imageResult =
                     navController.previousBackStackEntry?.savedStateHandle?.get<ImageResult>("imageCaptured")
                 ScanFishScreen(
-                    image = imageResult
+                    image = imageResult,
+                    onDetectedImage = {
+                        navController.currentBackStackEntry?.savedStateHandle?.set(
+                            "DetectionResult", it
+                        )
+                    },
+                    navigateToResult = {
+                        navController.currentBackStackEntry?.savedStateHandle?.set(
+                            "ImageCaptured", imageResult
+                        )
+                        navController.navigate(Screen.ScanResult.route)
+                    }
                 )
+
+            }
+
+            composable(Screen.ScanResult.route) {
+                val imageResult =
+                    navController.previousBackStackEntry?.savedStateHandle?.get<ImageResult>("imageCaptured")
+                ScanResultScreen(image = imageResult)
             }
 
 
@@ -266,10 +285,10 @@ fun FisheryApp(
             composable(
                 Screen.DetailPost.route,
                 arguments = listOf(
-                    navArgument("idPost") { type = NavType.StringType }
+                    navArgument("idPost") { type = NavType.IntType }
                 )
             ) {
-                val idPost = it.arguments?.getString("idPost") ?: ""
+                val idPost = it.arguments?.getInt("idPost", 0) ?: 0
                 DetailPostScreen(idPost)
             }
 
@@ -294,12 +313,14 @@ fun FisheryApp(
             }
 
             composable(Screen.ChangeProfile.route) {
-                val user = navController.previousBackStackEntry?.savedStateHandle?.get<UserData?>("userData")
+                val user =
+                    navController.previousBackStackEntry?.savedStateHandle?.get<UserData?>("userData")
                 ChangeProfileScreen(user)
             }
 
             composable(Screen.ChangeEmail.route) {
-                val user = navController.previousBackStackEntry?.savedStateHandle?.get<UserData?>("userData")
+                val user =
+                    navController.previousBackStackEntry?.savedStateHandle?.get<UserData?>("userData")
                 ChangeEmailScreen(user)
             }
 
