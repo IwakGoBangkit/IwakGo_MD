@@ -5,6 +5,7 @@ import com.bangkit.fishery_app.data.source.remote.response.FishResponse
 import com.bangkit.fishery_app.data.source.remote.response.FishResponseItem
 import com.bangkit.fishery_app.data.source.remote.response.PostResponse
 import com.bangkit.fishery_app.data.source.remote.response.PostResponseItem
+import com.bangkit.fishery_app.data.source.remote.response.ScanResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.GET
@@ -36,5 +37,11 @@ interface ApiService {
         @Part ("phoneNumber") phoneNumber: RequestBody? = null,
         @Part ("price") price: RequestBody? = null,
     )
+
+    @Multipart
+    @POST("home/upload-image")
+    suspend fun scanFish(
+        @Part fishImage: MultipartBody.Part? = null
+    ): ScanResponse
 
 }

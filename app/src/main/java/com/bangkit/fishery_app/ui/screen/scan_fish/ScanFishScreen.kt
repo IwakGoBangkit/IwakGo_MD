@@ -12,28 +12,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.bangkit.fishery_app.R
 import com.bangkit.fishery_app.ui.screen.home.model.ImageResult
-import com.bangkit.fishery_app.ui.screen.scan_fish.common.runImageDetector
-import com.bangkit.fishery_app.ui.screen.scan_result.model.DetectionResult
-import kotlinx.coroutines.launch
+import java.io.File
 
 @Composable
 fun ScanFishScreen(
     modifier: Modifier = Modifier,
     image: ImageResult?,
-    onDetectedImage: (List<DetectionResult>) -> Unit,
-    navigateToResult: () -> Unit,
+    onImageScanned: (image: ImageResult) -> Unit,
 ) {
 
     ScanFishContent(
         image = image,
-        navigateToResult = navigateToResult,
-        onDetectedImage = onDetectedImage,
+        onImageScanned = {
+            onImageScanned(
+                ImageResult(
+                    it
+                )
+            )
+        },
         modifier = modifier
     )
 }
@@ -42,11 +43,8 @@ fun ScanFishScreen(
 fun ScanFishContent(
     modifier: Modifier = Modifier,
     image: ImageResult?,
-    onDetectedImage: (List<DetectionResult>) -> Unit,
-    navigateToResult: () -> Unit
+    onImageScanned: (image: File) -> Unit
 ) {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
 
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -63,13 +61,7 @@ fun ScanFishContent(
 
         Button(
             onClick = {
-//                scope.launch {
-//                    context.runImageDetector(
-//                        imageFile = image?.imageFile,
-//                        onDetectedImage = onDetectedImage
-//                    )
-//                }
-                navigateToResult()
+                image?.imageFile?.let { onImageScanned(it) }
             },
             modifier = modifier.fillMaxWidth()
         ) {
