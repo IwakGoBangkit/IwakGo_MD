@@ -299,7 +299,15 @@ fun FisheryApp(
             }
 
             composable(Screen.AddPost.route) {
-                AddPostScreen()
+                AddPostScreen(
+                    moveToMarket = {
+                        navController.navigate(Screen.Market.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                inclusive = true
+                            }
+                        }
+                    }
+                )
             }
 
             composable(Screen.Profile.route) {
