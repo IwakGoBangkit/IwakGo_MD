@@ -28,13 +28,14 @@ interface ApiService {
     @Multipart
     @POST("marketplace/add-post")
     suspend fun addPost(
-        @Part photo: MultipartBody.Part? = null,
-        @Part ("title") title: RequestBody? = null,
-        @Part ("date") data: RequestBody? = null,
-        @Part ("description") description: RequestBody? = null,
-        @Part ("location") location: RequestBody? = null,
-        @Part ("phoneNumber") phoneNumber: RequestBody? = null,
-        @Part ("price") price: RequestBody? = null,
-    )
+        @Part("username") username: RequestBody?,
+        @Part("userProfilePhoto") userProfilePhoto: RequestBody?,
+        @Part("title") title: RequestBody,
+        @Part("description") description: RequestBody,
+        @Part("location") location: RequestBody,
+        @Part("phoneNumber") phoneNumber: RequestBody,
+        @Part("price") price: RequestBody,
+        @Part photo: MultipartBody.Part?,
+    ): PostResponseItem
 
 }
