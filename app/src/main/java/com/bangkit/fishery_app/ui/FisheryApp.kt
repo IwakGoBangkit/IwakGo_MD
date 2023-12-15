@@ -178,14 +178,9 @@ fun FisheryApp(
                     navController.previousBackStackEntry?.savedStateHandle?.get<ImageResult>("imageCaptured")
                 ScanFishScreen(
                     image = imageResult,
-                    onDetectedImage = {
+                    onImageScanned = {
                         navController.currentBackStackEntry?.savedStateHandle?.set(
-                            "DetectionResult", it
-                        )
-                    },
-                    navigateToResult = {
-                        navController.currentBackStackEntry?.savedStateHandle?.set(
-                            "ImageCaptured", imageResult
+                            "imageScanned", it
                         )
                         navController.navigate(Screen.ScanResult.route)
                     }
@@ -195,8 +190,19 @@ fun FisheryApp(
 
             composable(Screen.ScanResult.route) {
                 val imageResult =
-                    navController.previousBackStackEntry?.savedStateHandle?.get<ImageResult>("imageCaptured")
-                ScanResultScreen(image = imageResult)
+                    navController.previousBackStackEntry?.savedStateHandle?.get<ImageResult>("imageScanned")
+                ScanResultScreen(
+                    image = imageResult,
+                    navigateToHome = {
+                        navController.navigate(Screen.Home.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                )
             }
 
 
