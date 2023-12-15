@@ -87,7 +87,7 @@ fun OnBoardingContent(
         )
 
         Image(
-            painter = painterResource(R.drawable.boarding),
+            painter = painterResource(R.drawable.on_boarding),
             contentDescription = stringResource(R.string.boarding_desc),
             alignment = Alignment.Center,
             modifier = modifier
