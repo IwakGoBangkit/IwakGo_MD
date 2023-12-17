@@ -7,7 +7,8 @@ import com.bangkit.fishery_app.data.source.remote.response.FishPoolResponse
 import com.bangkit.fishery_app.data.source.remote.response.FishPreservationResponse
 import com.bangkit.fishery_app.data.source.remote.response.FishResponseItem
 import com.bangkit.fishery_app.data.source.remote.response.FishSeedResponse
-import com.bangkit.fishery_app.data.source.remote.response.PostResponseItem
+import com.bangkit.fishery_app.data.source.remote.response.PostResponse
+import com.bangkit.fishery_app.data.source.remote.response.ResultsItem
 import com.bangkit.fishery_app.data.source.remote.response.ScanResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -52,14 +53,16 @@ interface ApiService {
         @Path("name") name: String
     ): FishDiseaseResponse
 
-    @GET("marketplace/posts")
-    suspend fun getPosts(): List<PostResponseItem>
+    @GET("marketplace/allPosts")
+    suspend fun getPosts(): List<ResultsItem>
 
-    @GET("marketplace/posts")
-    suspend fun getDetailPost(id: Int) : PostResponseItem
+    @GET("marketplace/posts/{id}")
+    suspend fun getDetailPost(
+        @Path("id") id: Int
+    ): PostResponse
 
     @Multipart
-    @POST("marketplace/add-post")
+    @POST("marketplace/addPost")
     suspend fun addPost(
         @Part("username") username: RequestBody?,
         @Part("userProfilePhoto") userProfilePhoto: RequestBody?,
@@ -69,7 +72,7 @@ interface ApiService {
         @Part("phoneNumber") phoneNumber: RequestBody,
         @Part("price") price: RequestBody,
         @Part photo: MultipartBody.Part?,
-    ): PostResponseItem
+    ): PostResponse
 
     @Multipart
     @POST("home/scan/uploadImage")
@@ -77,4 +80,8 @@ interface ApiService {
         @Part fishImage: MultipartBody.Part?
     ): ScanResponse
 
+    @GET("marketplace/search")
+    suspend fun searchPost(
+        @Path("query") query: String
+    ): List<PostResponse>
 }

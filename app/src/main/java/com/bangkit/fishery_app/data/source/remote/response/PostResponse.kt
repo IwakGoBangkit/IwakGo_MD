@@ -4,11 +4,11 @@ import com.google.gson.annotations.SerializedName
 
 data class PostResponse(
 
-	@field:SerializedName("PostResponse")
-	val postResponse: List<PostResponseItem>
+	@field:SerializedName("results")
+	val results: List<ResultsItem>
 )
 
-data class PostResponseItem(
+data class ResultsItem(
 
 	@field:SerializedName("date")
 	val date: String,
@@ -19,11 +19,11 @@ data class PostResponseItem(
 	@field:SerializedName("price")
 	val price: Int,
 
-	@field:SerializedName("description")
-	val description: String,
-
 	@field:SerializedName("photo")
 	val photo: String,
+
+	@field:SerializedName("description")
+	val description: String,
 
 	@field:SerializedName("location")
 	val location: String,

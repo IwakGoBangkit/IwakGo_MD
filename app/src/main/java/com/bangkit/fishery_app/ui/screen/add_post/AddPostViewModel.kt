@@ -112,40 +112,42 @@ class AddPostViewModel @Inject constructor(
         image: File?
     ) = viewModelScope.launch {
         val user = firebaseAuth.getLoggedUser()
-        postRepository.addPost(
-            username = user?.username ?: username,
-            userProfilePhoto = user?.photoUrl ?: profilePhoto,
-            title = title,
-            description = description,
-            location = location,
-            phoneNumber = phoneNumber,
-            price = price,
-            photo = image
-        ).collect { result ->
-            when (result) {
-                is Result.Error -> {
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            addPostError = result.message,
-                            addPostSuccessful = false
-                        )
+        if (image != null) {
+            postRepository.addPost(
+                username = user?.username ?: username,
+                userProfilePhoto = user?.photoUrl ?: profilePhoto,
+                title = title,
+                description = description,
+                location = location,
+                phoneNumber = phoneNumber,
+                price = price,
+                photo = image
+            ).collect { result ->
+                when (result) {
+                    is Result.Error -> {
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                addPostError = result.message,
+                                addPostSuccessful = false
+                            )
+                        }
                     }
-                }
-                is Result.Loading -> {
-                    _state.update {
-                        it.copy(
-                            isLoading = true
-                        )
+                    is Result.Loading -> {
+                        _state.update {
+                            it.copy(
+                                isLoading = true
+                            )
+                        }
                     }
-                }
-                is Result.Success -> {
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            addPostSuccessful = true,
-                            postResult = result.data
-                        )
+                    is Result.Success -> {
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                addPostSuccessful = true,
+                                postResult = result.data
+                            )
+                        }
                     }
                 }
             }
