@@ -47,6 +47,7 @@ import com.bangkit.fishery_app.R
 import com.bangkit.fishery_app.data.model.CommentModel
 import com.bangkit.fishery_app.data.model.PostModel
 import com.bangkit.fishery_app.ui.components.PostInfo
+import com.bangkit.fishery_app.util.DateHelper
 
 @Composable
 fun DetailPostScreen(
@@ -108,7 +109,7 @@ fun DetailPostContent(
                     modifier = modifier
                 )
                 Text(
-                    text = detailPost.date,
+                    text = DateHelper.formatIsoDate(detailPost.date),
                     fontSize = 12.sp,
                     fontStyle = FontStyle.Italic,
                     modifier = modifier

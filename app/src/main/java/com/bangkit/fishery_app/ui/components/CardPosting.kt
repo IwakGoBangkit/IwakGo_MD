@@ -1,6 +1,5 @@
 package com.bangkit.fishery_app.ui.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -72,7 +70,7 @@ fun CardPosting(
                         modifier = modifier
                     )
                     Text(
-                        text = date,
+                        text = DateHelper.formatIsoDate(date),
                         fontSize = 12.sp,
                         fontStyle = FontStyle.Italic,
                         modifier = modifier
