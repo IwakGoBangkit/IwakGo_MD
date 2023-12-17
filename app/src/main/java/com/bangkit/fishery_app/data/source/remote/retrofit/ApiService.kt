@@ -1,5 +1,6 @@
 package com.bangkit.fishery_app.data.source.remote.retrofit
 
+import com.bangkit.fishery_app.data.source.remote.response.DetailPostResponse
 import com.bangkit.fishery_app.data.source.remote.response.FeedRecommendationResponse
 import com.bangkit.fishery_app.data.source.remote.response.FishDiseaseResponse
 import com.bangkit.fishery_app.data.source.remote.response.FishHarvestResponse
@@ -8,7 +9,6 @@ import com.bangkit.fishery_app.data.source.remote.response.FishPreservationRespo
 import com.bangkit.fishery_app.data.source.remote.response.FishResponseItem
 import com.bangkit.fishery_app.data.source.remote.response.FishSeedResponse
 import com.bangkit.fishery_app.data.source.remote.response.PostResponse
-import com.bangkit.fishery_app.data.source.remote.response.ResultsItem
 import com.bangkit.fishery_app.data.source.remote.response.ScanResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -54,12 +54,12 @@ interface ApiService {
     ): FishDiseaseResponse
 
     @GET("marketplace/allPosts")
-    suspend fun getPosts(): List<ResultsItem>
+    suspend fun getPosts(): PostResponse
 
     @GET("marketplace/posts/{id}")
     suspend fun getDetailPost(
         @Path("id") id: Int
-    ): PostResponse
+    ): DetailPostResponse
 
     @Multipart
     @POST("marketplace/addPost")

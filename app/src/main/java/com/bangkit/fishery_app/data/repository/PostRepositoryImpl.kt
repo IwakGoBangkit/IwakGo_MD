@@ -1,8 +1,6 @@
 package com.bangkit.fishery_app.data.repository
 
 import com.bangkit.fishery_app.data.model.PostModel
-import com.bangkit.fishery_app.data.source.firebase.FirebaseAuth
-import com.bangkit.fishery_app.data.source.remote.response.AddPostResponse
 import com.bangkit.fishery_app.data.source.remote.response.PostResponse
 import com.bangkit.fishery_app.data.source.remote.retrofit.ApiConfig
 import com.bangkit.fishery_app.util.Result
@@ -20,10 +18,10 @@ import javax.inject.Inject
 class PostRepositoryImpl @Inject constructor(
 ) : PostRepository {
 
-    override suspend fun getAllPost(): Flow<Result<List<PostModel>>> = flow {
+    override suspend fun getAllPost() = flow {
         emit(Result.Loading())
         try {
-            val response = ApiConfig.getApiService().getPosts().map {
+            val response = ApiConfig.getApiService().getPosts().results.map {
                 PostModel(
                     idPost = it.id,
                     username = it.username,
@@ -43,10 +41,10 @@ class PostRepositoryImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun getDetailPost(id: Int): Flow<Result<PostModel>> = flow {
+    override suspend fun getDetailPost(idPost: Int) = flow {
         emit(Result.Loading())
         try {
-            val response = ApiConfig.getApiService().getDetailPost(id).results.map {
+            val response = ApiConfig.getApiService().getDetailPost(idPost).data.let {
                     PostModel(
                         idPost = it.id,
                         username = it.username,
@@ -59,7 +57,7 @@ class PostRepositoryImpl @Inject constructor(
                         price = it.price.toString(),
                         description = it.description,
                     )
-                }.first()
+                }
             emit(Result.Success(response))
         } catch (e: Exception) {
             emit(Result.Error(e.message))

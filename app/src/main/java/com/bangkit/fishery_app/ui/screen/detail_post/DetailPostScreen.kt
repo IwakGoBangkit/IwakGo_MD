@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AttachMoney
@@ -28,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -41,8 +44,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.bangkit.fishery_app.R
+import com.bangkit.fishery_app.data.model.CommentModel
 import com.bangkit.fishery_app.data.model.PostModel
 import com.bangkit.fishery_app.ui.components.PostInfo
+import com.bangkit.fishery_app.ui.components.UserComment
 
 @Composable
 fun DetailPostScreen(
@@ -56,7 +61,8 @@ fun DetailPostScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     state.detailPost?.let { detailPost ->
         DetailPostContent(
-            detailPost = detailPost
+            detailPost = detailPost,
+            listComment = state.listComment
         )
     }
 
@@ -67,6 +73,7 @@ fun DetailPostScreen(
 fun DetailPostContent(
     modifier: Modifier = Modifier,
     detailPost: PostModel,
+    listComment: List<CommentModel>,
 ) {
 
 
@@ -185,7 +192,9 @@ fun DetailPostContent(
             }
         }
         if (showCommentPage) {
-            CommentPage()
+            CommentPage(
+                listComment = listComment
+            )
         }
     }
 }
@@ -193,11 +202,29 @@ fun DetailPostContent(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentPage(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    listComment: List<CommentModel>
 ) {
+
+    var comment = remember {
+        mutableStateOf("")
+    }
+
     BottomSheetScaffold(
         sheetContent = {
-
+            LazyColumn(
+                modifier = modifier,
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
+                items(listComment) { user ->
+                    UserComment(
+                        image = user.userImage,
+                        username = user.username,
+                        comment = user.comment
+                    )
+                }
+            }
         }
     ) {
 

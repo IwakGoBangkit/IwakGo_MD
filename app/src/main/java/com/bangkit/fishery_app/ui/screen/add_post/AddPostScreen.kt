@@ -7,6 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -23,7 +24,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,7 +50,6 @@ fun AddPostScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
 
     var imageUri by remember { mutableStateOf<Uri?>(null) }
 
@@ -92,7 +91,8 @@ fun AddPostScreen(
                         contentDescription = null
                     ),
                     contentDescription = stringResource(R.string.upload_image),
-                    contentScale = ContentScale.Crop,
+                    contentScale = ContentScale.FillBounds,
+                    modifier = modifier.fillMaxSize()
                 )
             }
         }
@@ -175,9 +175,6 @@ fun AddPostContent(
     onDescriptionChanged: (String) -> Unit,
     successUpload: () -> Unit,
 ) {
-
-    val scope = rememberCoroutineScope()
-    val context = LocalContext.current
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
