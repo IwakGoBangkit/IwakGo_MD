@@ -24,7 +24,7 @@ class ApiConfig {
                 .build()
 
             val retrofit = Retrofit.Builder()
-                .baseUrl("https://fishery-dot-ch2-ps246.et.r.appspot.com/api/")
+                .baseUrl("https://ch2-ps246.et.r.appspot.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build()

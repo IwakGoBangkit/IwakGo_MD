@@ -1,34 +1,48 @@
 package com.bangkit.fishery_app.ui.screen.harvest
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import com.bangkit.fishery_app.R
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.bangkit.fishery_app.data.model.HarvestContentModel
+import com.bangkit.fishery_app.ui.components.ItemContentModel
 
 @Composable
 fun HarvestScreen(
-    fish: String
+    fish: String,
+    viewModel: HarvestViewModel = hiltViewModel()
 ) {
-    HarvestContent(fishName = fish)
+    LaunchedEffect(key1 = fish) {
+        viewModel.getFishHarvest(fish)
+    }
+
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    HarvestContent(
+        listHarvest = state.listHarvest
+    )
 }
 
 @Composable
 fun HarvestContent(
-    fishName: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    listHarvest: List<HarvestContentModel>
 ) {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.fillMaxSize()
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier.padding(16.dp)
     ) {
-        Text(
-            text = stringResource(R.string.harvest) + " " + stringResource(R.string.fish) + " " + fishName
-        )
+        items(listHarvest) {
+            ItemContentModel(
+                image = it.image,
+                description = it.description
+            )
+        }
     }
 }

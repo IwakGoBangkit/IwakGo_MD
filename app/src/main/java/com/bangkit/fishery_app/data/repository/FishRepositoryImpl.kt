@@ -1,6 +1,10 @@
 package com.bangkit.fishery_app.data.repository
 
+import com.bangkit.fishery_app.data.model.ContentModel
+import com.bangkit.fishery_app.data.model.ContentStepModel
 import com.bangkit.fishery_app.data.model.FishMenu
+import com.bangkit.fishery_app.data.model.HarvestContentModel
+import com.bangkit.fishery_app.data.model.Method
 import com.bangkit.fishery_app.data.source.remote.retrofit.ApiConfig
 import com.bangkit.fishery_app.util.Result
 import kotlinx.coroutines.Dispatchers
@@ -32,6 +36,119 @@ class FishRepositoryImpl @Inject constructor() : FishRepository {
         }
     }.flowOn(Dispatchers.IO)
 
+    override suspend fun getPoolSelection(name: String) = flow {
+        emit(Result.Loading())
+
+        try {
+            val response = ApiConfig.getApiService().getFishPool(name).pemilihanKolam.map {fish ->
+                ContentModel(
+                    title = fish.title,
+                    image = fish.gambar,
+                    description = fish.konten
+                )
+            }
+            emit(Result.Success(response))
+        } catch (e: Exception) {
+            emit(Result.Error(e.message))
+        }
+    }.flowOn(Dispatchers.IO)
+
+    override suspend fun getSeedSelection(name: String) = flow {
+        emit(Result.Loading())
+
+        try {
+            val response = ApiConfig.getApiService().getFishSeed(name).pemilihanBenih.let {fish ->
+                ContentStepModel(
+                    titleMenu = fish.title,
+                    image = fish.gambar,
+                    listMethodChooseSeed = fish.konten.map {
+                        Method(
+                            step = it.step,
+                            title = it.judul,
+                            description = it.deskripsi
+                        )
+                    }
+                )
+            }
+            emit(Result.Success(response))
+        } catch (e: Exception) {
+            emit(Result.Error(e.message))
+        }
+    }.flowOn(Dispatchers.IO)
+
+    override suspend fun getPreservation(name: String) = flow {
+        emit(Result.Loading())
+
+        try {
+            val response = ApiConfig.getApiService().getFishPreservation(name).pemeliharaan.let {fish ->
+                ContentStepModel(
+                    titleMenu = fish.title,
+                    image = fish.gambar,
+                    listMethodChooseSeed = fish.konten.map {
+                        Method(
+                            step = it.step,
+                            title = it.judul,
+                            description = it.deskripsi
+                        )
+                    }
+                )
+            }
+            emit(Result.Success(response))
+        } catch (e: Exception) {
+            emit(Result.Error(e.message))
+        }
+    }.flowOn(Dispatchers.IO)
+
+    override suspend fun getFishHarvest(name: String) = flow {
+        emit(Result.Loading())
+
+        try {
+            val response = ApiConfig.getApiService().getFishHarvest(name).panen.map {
+                HarvestContentModel(
+                    image = it.gambar,
+                    description = it.konten
+                )
+            }
+            emit(Result.Success(response))
+        } catch (e: Exception) {
+            emit(Result.Error(e.message))
+        }
+    }.flowOn(Dispatchers.IO)
+
+    override suspend fun getFishFeedRecommendation(name: String) = flow {
+        emit(Result.Loading())
+
+        try {
+            val response = ApiConfig.getApiService().getFishFeedRecommendation(name).rekomendasiPakan.map {fish ->
+                ContentModel(
+                    title = fish.title,
+                    image = fish.gambar,
+                    description = fish.konten
+                )
+            }
+            emit(Result.Success(response))
+        } catch (e: Exception) {
+            emit(Result.Error(e.message))
+        }
+    }.flowOn(Dispatchers.IO)
+
+    override suspend fun getFishDisease(name: String) = flow {
+        emit(Result.Loading())
+
+        try {
+            val response = ApiConfig.getApiService().getFishDisease(name).penyakit.map {fish ->
+                ContentModel(
+                    title = fish.title,
+                    image = fish.gambar,
+                    description = fish.konten
+                )
+            }
+            emit(Result.Success(response))
+        } catch (e: Exception) {
+            emit(Result.Error(e.message))
+        }
+    }.flowOn(Dispatchers.IO)
+
     override fun scanFish(imageFish: File): Flow<Result<String>>  = flow {
         val requestImageFile = imageFish.asRequestBody("image/jpg".toMediaType())
         val fileMultipart = MultipartBody.Part.createFormData(
@@ -44,7 +161,7 @@ class FishRepositoryImpl @Inject constructor() : FishRepository {
 
         try {
             val response = ApiConfig.getApiService().scanFish(fileMultipart)
-            val condition = response.kondisi
+            val condition = response.imageUrl
             emit(Result.Success(condition))
         } catch (e: Exception) {
             emit(Result.Error(e.message))

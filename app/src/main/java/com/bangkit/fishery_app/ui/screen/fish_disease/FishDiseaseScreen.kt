@@ -1,36 +1,52 @@
 package com.bangkit.fishery_app.ui.screen.fish_disease
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import com.bangkit.fishery_app.R
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.bangkit.fishery_app.data.model.ContentModel
+import com.bangkit.fishery_app.ui.components.ItemContentModelWithTitle
 
 @Composable
 fun FishDiseaseScreen(
-    fish: String
+    fish: String,
+    viewModel: FishDiseaseViewModel = hiltViewModel()
 ) {
+
+    LaunchedEffect(key1 = fish) {
+        viewModel.getFishDisease(fish)
+    }
+
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+
     FishDiseaseContent(
-        fishName = fish
+        listDisease = state.listDisease
     )
 }
 
 @Composable
 fun FishDiseaseContent(
-    fishName: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    listDisease: List<ContentModel>
 ) {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.fillMaxSize()
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier.padding(16.dp)
     ) {
-        Text(
-            text = stringResource(R.string.disease)
-        )
+        items(listDisease, key = {it.title}) {
+            ItemContentModelWithTitle(
+                title = it.title,
+                image =it.image,
+                description =it.description
+            )
+        }
     }
 }
