@@ -1,5 +1,6 @@
 package com.bangkit.fishery_app.data.source.remote.retrofit
 
+import com.bangkit.fishery_app.data.source.remote.response.CommentResponse
 import com.bangkit.fishery_app.data.source.remote.response.DetailPostResponse
 import com.bangkit.fishery_app.data.source.remote.response.FeedRecommendationResponse
 import com.bangkit.fishery_app.data.source.remote.response.FishDiseaseResponse
@@ -12,6 +13,7 @@ import com.bangkit.fishery_app.data.source.remote.response.PostResponse
 import com.bangkit.fishery_app.data.source.remote.response.ScanResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -84,4 +86,15 @@ interface ApiService {
     suspend fun searchPost(
         @Path("query") query: String
     ): List<PostResponse>
+
+    @GET("comment/{id}/getComment")
+    suspend fun getComment(
+        @Path("id") id: Int
+    ): CommentResponse
+
+    @POST("comment/{id}/addComment")
+    suspend fun addComment(
+        @Body requestBody: RequestBody,
+        @Path("id") id: Int
+    ): CommentResponse
 }

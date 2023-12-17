@@ -1,9 +1,12 @@
 package com.bangkit.fishery_app.data.repository
 
+import com.bangkit.fishery_app.data.model.CommentModel
 import com.bangkit.fishery_app.data.model.PostModel
+import com.bangkit.fishery_app.data.source.remote.response.CommentResponse
 import com.bangkit.fishery_app.data.source.remote.response.PostResponse
 import com.bangkit.fishery_app.data.source.remote.retrofit.ApiConfig
 import com.bangkit.fishery_app.util.Result
+import com.google.gson.JsonObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -45,19 +48,19 @@ class PostRepositoryImpl @Inject constructor(
         emit(Result.Loading())
         try {
             val response = ApiConfig.getApiService().getDetailPost(idPost).data.let {
-                    PostModel(
-                        idPost = it.id,
-                        username = it.username,
-                        userPhoto = it.userProfilePhoto,
-                        date = it.date,
-                        image = it.photo,
-                        title = it.title,
-                        location = it.location,
-                        phone = it.phoneNumber,
-                        price = it.price.toString(),
-                        description = it.description,
-                    )
-                }
+                PostModel(
+                    idPost = it.id,
+                    username = it.username,
+                    userPhoto = it.userProfilePhoto,
+                    date = it.date,
+                    image = it.photo,
+                    title = it.title,
+                    location = it.location,
+                    phone = it.phoneNumber,
+                    price = it.price.toString(),
+                    description = it.description,
+                )
+            }
             emit(Result.Success(response))
         } catch (e: Exception) {
             emit(Result.Error(e.message))
@@ -110,5 +113,43 @@ class PostRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
+    override suspend fun getComment(idPost: Int): Flow<Result<List<CommentModel>>> = flow {
+        emit(Result.Loading())
+        try {
+            val response = ApiConfig.getApiService().getComment(idPost).data.map {
+                CommentModel(
+                    idPost = it.id,
+                    comment = it.comment,
+                    photoProfile = it.photoProfile,
+                    username = it.username,
+                )
+            }
+            emit(Result.Success(response))
+        } catch (e: Exception) {
+            emit(Result.Error(e.message))
+        }
+    }.flowOn(Dispatchers.IO)
+
+    override suspend fun addComment(
+        idPost: Int,
+        username: String?,
+        photoProfile: String?,
+        comment: String?
+    ): Flow<Result<CommentResponse>> = flow {
+        emit(Result.Loading())
+        val json = JsonObject().apply {
+            addProperty("username", username)
+            addProperty("photoProfile", photoProfile)
+            addProperty("comment", comment)
+        }
+        val requestBody = json.toString().toRequestBody("application/json".toMediaType())
+        try {
+            val apiService = ApiConfig.getApiService()
+            val response = apiService.addComment(requestBody, idPost)
+            emit(Result.Success(response))
+        } catch (e: Exception) {
+            emit(Result.Error(e.message))
+        }
+    }.flowOn(Dispatchers.IO)
 
 }
