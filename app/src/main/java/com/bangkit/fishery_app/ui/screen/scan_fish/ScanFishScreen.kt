@@ -9,11 +9,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.bangkit.fishery_app.R
 import com.bangkit.fishery_app.ui.screen.home.model.ImageResult
@@ -24,16 +24,15 @@ fun ScanFishScreen(
     modifier: Modifier = Modifier,
     image: ImageResult?,
     onImageScanned: (image: ImageResult) -> Unit,
+    viewModel: ScanFishViewModel = hiltViewModel()
 ) {
-
     ScanFishContent(
         image = image,
         onImageScanned = {
-            onImageScanned(
-                ImageResult(
-                    it
-                )
-            )
+            viewModel.uploadImage(it)
+            image?.let {image ->
+                onImageScanned(image)
+            }
         },
         modifier = modifier
     )
