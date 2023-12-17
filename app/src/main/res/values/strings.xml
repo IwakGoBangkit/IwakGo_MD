@@ -91,4 +91,7 @@
     <string name="confirm_logout">Apakah Anda yakin ingin keluar?</string>
     <string name="yes">Ya</string>
     <string name="no">Batal</string>
+
+    <string name="empty_input_warning">Input komentar belum diisi!</string>
+    <string name="no_comment">Belum ada komentar disini</string>
 </resources>

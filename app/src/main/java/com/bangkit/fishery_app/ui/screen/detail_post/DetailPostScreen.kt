@@ -1,5 +1,6 @@
 package com.bangkit.fishery_app.ui.screen.detail_post
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,7 +22,6 @@ import androidx.compose.material.icons.filled.CreditCard
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,10 +37,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -55,6 +55,7 @@ import com.bangkit.fishery_app.R
 import com.bangkit.fishery_app.data.model.CommentModel
 import com.bangkit.fishery_app.data.model.PostModel
 import com.bangkit.fishery_app.ui.components.CardMessageItem
+import com.bangkit.fishery_app.ui.components.LoadingDialog
 import com.bangkit.fishery_app.ui.components.PostInfo
 import com.bangkit.fishery_app.util.DateHelper
 import kotlinx.coroutines.launch
@@ -99,12 +100,13 @@ fun DetailPostScreen(
         if (state.isCommentSuccessful) {
             viewModel.viewModelScope.launch {
                 viewModel.getCommentById(id)
+                viewModel.onEvent(DetailPostEvent.OnCommentChanged(""))
             }
         }
     }
 
     if (state.isLoading) {
-        CircularProgressIndicator()
+        LoadingDialog()
     }
 
 }
@@ -122,6 +124,10 @@ fun DetailPostContent(
     var showButtonSheet by rememberSaveable {
         mutableStateOf(false)
     }
+    var showEmptyInputWarning by rememberSaveable {
+        mutableStateOf(false)
+    }
+    val context = LocalContext.current
 
     Column(
         modifier = modifier.padding(top = 16.dp)
@@ -130,7 +136,7 @@ fun DetailPostContent(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = modifier
                 .fillMaxWidth()
-                .padding(8.dp)
+                .padding(16.dp)
         ) {
             AsyncImage(
                 model = detailPost.userPhoto,
@@ -167,32 +173,38 @@ fun DetailPostContent(
                 .height(280.dp)
         )
 
-        Text(
-            text = detailPost.title,
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold,
+        Column(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(start = 8.dp, top = 8.dp)
-        )
+                .padding(16.dp)
+        ) {
+            Text(
+                text = detailPost.title,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(start = 8.dp, top = 8.dp)
+            )
 
-        PostInfo(
-            icon = Icons.Default.LocationOn, text = detailPost.location
-        )
+            PostInfo(
+                icon = Icons.Default.LocationOn, text = detailPost.location
+            )
 
-        PostInfo(
-            icon = Icons.Default.Call, text = detailPost.phone
-        )
+            PostInfo(
+                icon = Icons.Default.Call, text = detailPost.phone
+            )
 
-        PostInfo(
-            icon = Icons.Default.AttachMoney, text = detailPost.price
-        )
+            PostInfo(
+                icon = Icons.Default.AttachMoney, text = detailPost.price
+            )
 
-        Text(
-            text = detailPost.description,
-            textAlign = TextAlign.Justify,
-            modifier = modifier.padding(8.dp)
-        )
+            Text(
+                text = detailPost.description,
+                textAlign = TextAlign.Justify,
+                modifier = modifier.padding(8.dp)
+            )
+        }
 
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -236,8 +248,17 @@ fun DetailPostContent(
                 },
                 inputComment = inputComment,
                 onInputCommentChange = onInputCommentChange,
-                onSendComment = onSendComment
+                onSendComment = {
+                    if (inputComment.isNotBlank()) {
+                        onSendComment()
+                    } else {
+                        showEmptyInputWarning = true
+                    }
+                }
             )
+        }
+        if (showEmptyInputWarning) {
+            Toast.makeText(context, stringResource(id = R.string.empty_input_warning), Toast.LENGTH_SHORT).show()
         }
     }
 }
@@ -264,7 +285,6 @@ fun CommentPage(
             Column(
                 modifier = modifier
                     .fillMaxWidth()
-                    .align(Alignment.TopCenter)
             ) {
                 Text(
                     text = stringResource(R.string.comment),
@@ -274,48 +294,55 @@ fun CommentPage(
                         .fillMaxWidth()
                         .padding(start = 8.dp, top = 8.dp)
                 )
-                LazyColumn(
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp, bottom = 8.dp)
-                ) {
-                    items(listComment, key = { it.idPost }) { comment ->
-                        CardMessageItem(
-                            photoProfile = comment.photoProfile,
-                            username = comment.username,
-                            comment = comment.comment
-                        )
-                    }
-                }
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = modifier
-                        .padding(start = 8.dp, end = 8.dp, top = 32.dp)
-                        .fillMaxWidth()
-                ) {
-                    OutlinedTextField(
-                        value = inputComment,
-                        onValueChange = onInputCommentChange,
-                        shape = RoundedCornerShape(24.dp),
-                        modifier = modifier.fillMaxWidth(),
-                        trailingIcon = {
-                            IconButton(
-                                onClick = onSendComment,
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Send,
-                                    contentDescription = stringResource(R.string.send),
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                            }
-                        },
-                        placeholder = {
-                            Text(
-                                text = stringResource(R.string.comment), modifier = modifier
+                if (listComment.isNotEmpty()) {
+                    LazyColumn(
+                        modifier = modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                            .padding(top = 8.dp)
+                    ) {
+                        items(listComment, key = { it.idPost }) { comment ->
+                            CardMessageItem(
+                                photoProfile = comment.photoProfile,
+                                username = comment.username,
+                                comment = comment.comment
                             )
-                        },
+                        }
+                    }
+                } else {
+                    Text(
+                        text = stringResource(R.string.no_comment),
+                        fontSize = 16.sp,
+                        modifier = modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        fontStyle = FontStyle.Italic,
                     )
                 }
+                OutlinedTextField(
+                    value = inputComment,
+                    onValueChange = onInputCommentChange,
+                    shape = RoundedCornerShape(24.dp),
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    trailingIcon = {
+                        IconButton(
+                            onClick = onSendComment,
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Send,
+                                contentDescription = stringResource(R.string.send),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    },
+                    placeholder = {
+                        Text(
+                            text = stringResource(R.string.comment), modifier = modifier
+                        )
+                    },
+                )
             }
         }
     }
