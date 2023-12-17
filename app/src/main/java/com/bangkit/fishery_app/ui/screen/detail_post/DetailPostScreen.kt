@@ -47,7 +47,6 @@ import com.bangkit.fishery_app.R
 import com.bangkit.fishery_app.data.model.CommentModel
 import com.bangkit.fishery_app.data.model.PostModel
 import com.bangkit.fishery_app.ui.components.PostInfo
-import com.bangkit.fishery_app.ui.components.UserComment
 
 @Composable
 fun DetailPostScreen(
@@ -218,11 +217,7 @@ fun CommentPage(
                 horizontalAlignment = Alignment.Start
             ) {
                 items(listComment) { user ->
-                    UserComment(
-                        image = user.userImage,
-                        username = user.username,
-                        comment = user.comment
-                    )
+
                 }
             }
         }
