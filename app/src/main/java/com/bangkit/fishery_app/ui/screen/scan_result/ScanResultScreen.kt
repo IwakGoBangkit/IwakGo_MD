@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,13 +20,12 @@ import coil.compose.AsyncImage
 import com.bangkit.fishery_app.R
 import com.bangkit.fishery_app.ui.components.SectionText
 import com.bangkit.fishery_app.ui.screen.home.model.ImageResult
-import com.bangkit.fishery_app.ui.screen.scan_result.model.DetectionResult
 
 @Composable
 fun ScanResultScreen(
     image: ImageResult?,
     navigateToHome: () -> Unit,
-    viewModel: ScanResultViewModel = hiltViewModel()
+    viewModel: ScanResultViewModel = hiltViewModel(),
 ) {
 
     val state by viewModel.state.collectAsStateWithLifecycle()

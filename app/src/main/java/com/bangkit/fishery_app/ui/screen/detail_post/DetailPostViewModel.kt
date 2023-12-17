@@ -19,7 +19,6 @@ class DetailPostViewModel @Inject constructor(
     private val _state = MutableStateFlow(DetailPostState())
     val state = _state.asStateFlow()
 
-
     fun getDetailPostById(id: Int) = viewModelScope.launch {
         postRepository.getDetailPost(id).collect {result ->
             when(result) {

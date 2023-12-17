@@ -135,7 +135,8 @@ fun LoginContent(
     }
 
     Box(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
+            .fillMaxSize()
             .padding(top = 104.dp, start = 24.dp, end = 24.dp),
     ) {
         Column(
@@ -205,11 +206,7 @@ fun LoginContent(
 
             Button(
                 onClick = {
-                    if (email.isNotEmpty() && password.isNotEmpty()) {
-                        loggedIn()
-                    } else {
-
-                    }
+                    loggedIn()
                 },
                 modifier = modifier
                     .fillMaxWidth()
