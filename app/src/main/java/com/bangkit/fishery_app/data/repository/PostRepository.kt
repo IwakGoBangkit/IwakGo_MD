@@ -1,6 +1,8 @@
 package com.bangkit.fishery_app.data.repository
 
 import com.bangkit.fishery_app.data.model.PostModel
+import com.bangkit.fishery_app.data.source.remote.response.AddPostResponse
+import com.bangkit.fishery_app.data.source.remote.response.PostResponse
 import com.bangkit.fishery_app.util.Result
 import kotlinx.coroutines.flow.Flow
 import java.io.File
@@ -10,7 +12,7 @@ interface PostRepository {
 
     suspend fun getAllPost(): Flow<Result<List<PostModel>>>
 
-    suspend fun getDetailPost(id: Int): Flow<Result<PostModel>>
+    suspend fun getDetailPost(idPost: Int): Flow<Result<PostModel>>
 
     suspend fun addPost(
         username: String?,
@@ -20,7 +22,9 @@ interface PostRepository {
         location: String,
         phoneNumber: String,
         price: String,
-        photo: File?
-    ): Flow<Result<PostModel>>
+        photo: File
+    ): Flow<Result<PostResponse>>
+
+    suspend fun searchPost(query: String): Flow<Result<List<PostModel>>>
 
 }

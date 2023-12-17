@@ -2,6 +2,8 @@ package com.bangkit.fishery_app.data.repository
 
 import com.bangkit.fishery_app.data.model.PostModel
 import com.bangkit.fishery_app.data.source.firebase.FirebaseAuth
+import com.bangkit.fishery_app.data.source.remote.response.AddPostResponse
+import com.bangkit.fishery_app.data.source.remote.response.PostResponse
 import com.bangkit.fishery_app.data.source.remote.retrofit.ApiConfig
 import com.bangkit.fishery_app.util.Result
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +18,6 @@ import java.io.File
 import javax.inject.Inject
 
 class PostRepositoryImpl @Inject constructor(
-    private val firebaseAuth: FirebaseAuth
 ) : PostRepository {
 
     override suspend fun getAllPost(): Flow<Result<List<PostModel>>> = flow {
@@ -45,20 +46,20 @@ class PostRepositoryImpl @Inject constructor(
     override suspend fun getDetailPost(id: Int): Flow<Result<PostModel>> = flow {
         emit(Result.Loading())
         try {
-            val response = ApiConfig.getApiService().getDetailPost(id).let {
-                PostModel(
-                    idPost = it.id,
-                    username = it.username,
-                    userPhoto = it.userProfilePhoto,
-                    date = it.date,
-                    image = it.photo,
-                    title = it.title,
-                    location = it.location,
-                    phone = it.phoneNumber,
-                    price = it.price.toString(),
-                    description = it.description,
-                )
-            }
+            val response = ApiConfig.getApiService().getDetailPost(id).results.map {
+                    PostModel(
+                        idPost = it.id,
+                        username = it.username,
+                        userPhoto = it.userProfilePhoto,
+                        date = it.date,
+                        image = it.photo,
+                        title = it.title,
+                        location = it.location,
+                        phone = it.phoneNumber,
+                        price = it.price.toString(),
+                        description = it.description,
+                    )
+                }.first()
             emit(Result.Success(response))
         } catch (e: Exception) {
             emit(Result.Error(e.message))
@@ -73,28 +74,25 @@ class PostRepositoryImpl @Inject constructor(
         location: String,
         phoneNumber: String,
         price: String,
-        photo: File?
-    ): Flow<Result<PostModel>> = flow {
+        photo: File
+    ): Flow<Result<PostResponse>> = flow {
         emit(Result.Loading())
+        val usernameBody = username?.toRequestBody("text/plain".toMediaType())
+        val userProfilePhotoBody = userProfilePhoto?.toRequestBody("text/plain".toMediaType())
+        val titleBody = title.toRequestBody("text/plain".toMediaType())
+        val descriptionBody = description.toRequestBody("text/plain".toMediaType())
+        val locationBody = location.toRequestBody("text/plain".toMediaType())
+        val phoneNumberBody = phoneNumber.toRequestBody("text/plain".toMediaType())
+        val priceBody = price.toRequestBody("text/plain".toMediaType())
+        val requestImageFile = photo.asRequestBody("image/jpeg".toMediaType())
+        val multipartBody = MultipartBody.Part.createFormData(
+            "photo",
+            photo.name,
+            requestImageFile
+        )
         try {
-            val user = firebaseAuth.getLoggedUser()
-            val usernameBody = user?.username?.toRequestBody("text/plain".toMediaType())
-            val userProfilePhotoBody = user?.photoUrl?.toRequestBody("text/plain".toMediaType())
-            val titleBody = title.toRequestBody("text/plain".toMediaType())
-            val descriptionBody = description.toRequestBody("text/plain".toMediaType())
-            val locationBody = location.toRequestBody("text/plain".toMediaType())
-            val phoneNumberBody = phoneNumber.toRequestBody("text/plain".toMediaType())
-            val priceBody = price.toRequestBody("text/plain".toMediaType())
-
-            val photoPart = photo?.let {
-                val requestImageFile = it.asRequestBody("image/jpeg".toMediaType())
-                MultipartBody.Part.createFormData(
-                    "photo",
-                    it.name,
-                    requestImageFile
-                )
-            }
-            val response = ApiConfig.getApiService().addPost(
+            val apiService = ApiConfig.getApiService()
+            val response = apiService.addPost(
                 usernameBody,
                 userProfilePhotoBody,
                 titleBody,
@@ -102,26 +100,17 @@ class PostRepositoryImpl @Inject constructor(
                 locationBody,
                 phoneNumberBody,
                 priceBody,
-                photoPart
-            ).let {
-                PostModel(
-                    idPost = it.id,
-                    username = it.username,
-                    userPhoto = it.userProfilePhoto,
-                    date = it.date,
-                    image = it.photo,
-                    title = it.title,
-                    location = it.location,
-                    phone = it.phoneNumber,
-                    price = it.price.toString(),
-                    description = it.description,
-                )
-            }
+                multipartBody,
+            )
             emit(Result.Success(response))
         } catch (e: Exception) {
             emit(Result.Error(e.message))
         }
     }.flowOn(Dispatchers.IO)
+
+    override suspend fun searchPost(query: String): Flow<Result<List<PostModel>>> {
+        TODO("Not yet implemented")
+    }
 
 
 }

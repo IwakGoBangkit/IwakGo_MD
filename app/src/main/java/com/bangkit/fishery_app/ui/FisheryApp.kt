@@ -294,7 +294,7 @@ fun FisheryApp(
                     navArgument("idPost") { type = NavType.IntType }
                 )
             ) {
-                val idPost = it.arguments?.getInt("idPost", 0) ?: 0
+                val idPost = it.arguments?.getInt("idPost") ?: 0
                 DetailPostScreen(idPost)
             }
 
