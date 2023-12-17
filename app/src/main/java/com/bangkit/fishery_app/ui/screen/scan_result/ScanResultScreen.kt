@@ -32,10 +32,6 @@ fun ScanResultScreen(
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    LaunchedEffect(key1 = image,) {
-        image?.imageFile?.let { viewModel.scanFish(it) }
-    }
-
     ScanResultContent(
         navigateToHome = navigateToHome,
         condition = state.condition,
