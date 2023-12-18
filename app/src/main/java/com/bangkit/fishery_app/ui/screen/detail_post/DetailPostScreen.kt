@@ -176,7 +176,7 @@ fun DetailPostContent(
         Column(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(8.dp)
         ) {
             Text(
                 text = detailPost.title,
