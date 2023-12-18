@@ -79,7 +79,7 @@ interface ApiService {
     @Multipart
     @POST("home/scan/uploadImage")
     suspend fun scanFish(
-        @Part fishImage: MultipartBody.Part?
+        @Part image: MultipartBody.Part?
     ): ScanResponse
 
     @GET("marketplace/search")
