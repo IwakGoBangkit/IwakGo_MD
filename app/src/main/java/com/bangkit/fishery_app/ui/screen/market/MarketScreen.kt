@@ -27,9 +27,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewModelScope
 import com.bangkit.fishery_app.R
 import com.bangkit.fishery_app.data.model.PostModel
 import com.bangkit.fishery_app.ui.components.CardPosting
+import kotlinx.coroutines.launch
 
 @Composable
 fun MarketScreen(
@@ -43,6 +45,17 @@ fun MarketScreen(
         moveToDetailPost = moveToDetailPost,
         moveAddPost = moveAddPost,
         listPost = state.listPosts,
+        query = state.title,
+        onQueryChange = { query ->
+            viewModel.viewModelScope.launch {
+                viewModel.onEvent(MarketEvent.OnSearchQueryChanged(query))
+            }
+        },
+        onSearch = {
+            viewModel.viewModelScope.launch {
+                viewModel.onEvent(MarketEvent.GetPosts(state.title))
+            }
+        },
         modifier = modifier
     )
 }
@@ -53,6 +66,9 @@ fun MarketContent(
     moveToDetailPost: (idPost: Int) -> Unit,
     moveAddPost: () -> Unit,
     listPost: List<PostModel>,
+    query: String,
+    onQueryChange: (String) -> Unit,
+    onSearch: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -64,9 +80,9 @@ fun MarketContent(
             modifier = modifier
         ) {
             SearchBar(
-                query = "",
-                onQueryChange = {},
-                onSearch = {},
+                query = query,
+                onQueryChange = onQueryChange,
+                onSearch = { onSearch() },
                 active = false,
                 onActiveChange = {},
                 leadingIcon = {
@@ -103,8 +119,8 @@ fun MarketContent(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(vertical = 8.dp),
             modifier = modifier.padding(top = 16.dp)
-        ){
-            items(listPost, key = {it.idPost}) {post ->
+        ) {
+            items(listPost, key = { it.idPost }) { post ->
                 CardPosting(
                     username = post.username,
                     imgUser = post.userPhoto,

@@ -109,9 +109,28 @@ class PostRepositoryImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun searchPost(query: String): Flow<Result<List<PostModel>>> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun searchPost(title: String): Flow<Result<List<PostModel>>> = flow {
+        emit(Result.Loading())
+        try {
+            val response = ApiConfig.getApiService().searchPost(title).map {
+                PostModel(
+                    idPost = it.id,
+                    username = it.username,
+                    userPhoto = it.userProfilePhoto,
+                    date = it.date,
+                    image = it.photo,
+                    title = it.title,
+                    location = it.location,
+                    phone = it.phoneNumber,
+                    price = it.price.toString(),
+                    description = it.description,
+                )
+            }
+            emit(Result.Success(response))
+        } catch (e: Exception) {
+            emit(Result.Error(e.message))
+        }
+    }.flowOn(Dispatchers.IO)
 
     override suspend fun getComment(idPost: Int): Flow<Result<List<CommentModel>>> = flow {
         emit(Result.Loading())

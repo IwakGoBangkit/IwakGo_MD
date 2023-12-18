@@ -14,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MarketViewModel @Inject constructor(
     private val postRepository: PostRepository
-): ViewModel() {
+) : ViewModel() {
 
     private val _state = MutableStateFlow(MarketState())
     val state = _state.asStateFlow()
@@ -24,8 +24,8 @@ class MarketViewModel @Inject constructor(
     }
 
     private fun getListPosts() = viewModelScope.launch {
-        postRepository.getAllPost().collect {result ->
-            when(result) {
+        postRepository.getAllPost().collect { result ->
+            when (result) {
                 is Result.Error -> {
                     _state.update {
                         it.copy(
@@ -34,6 +34,7 @@ class MarketViewModel @Inject constructor(
                         )
                     }
                 }
+
                 is Result.Loading -> {
                     _state.update {
                         it.copy(
@@ -41,6 +42,7 @@ class MarketViewModel @Inject constructor(
                         )
                     }
                 }
+
                 is Result.Success -> {
                     _state.update {
                         it.copy(
@@ -49,6 +51,53 @@ class MarketViewModel @Inject constructor(
                         )
                     }
                 }
+            }
+        }
+    }
+
+    private fun searchPost(query: String) = viewModelScope.launch {
+        postRepository.searchPost(query).collect { result ->
+            when (result) {
+                is Result.Error -> {
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = result.message
+                        )
+                    }
+                }
+
+                is Result.Loading -> {
+                    _state.update {
+                        it.copy(
+                            isLoading = true
+                        )
+                    }
+                }
+
+                is Result.Success -> {
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            listPosts = result.data
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    fun onEvent(event: MarketEvent) {
+        when (event) {
+            is MarketEvent.OnSearchQueryChanged -> {
+                _state.update {
+                    it.copy(
+                        title = event.query
+                    )
+                }
+            }
+            is MarketEvent.GetPosts -> {
+                searchPost(state.value.title)
             }
         }
     }

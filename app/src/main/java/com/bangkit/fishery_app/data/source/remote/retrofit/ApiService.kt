@@ -11,6 +11,7 @@ import com.bangkit.fishery_app.data.source.remote.response.FishResponseItem
 import com.bangkit.fishery_app.data.source.remote.response.FishSeedResponse
 import com.bangkit.fishery_app.data.source.remote.response.PostResponse
 import com.bangkit.fishery_app.data.source.remote.response.ScanResponse
+import com.bangkit.fishery_app.data.source.remote.response.SearchResponseItem
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.Body
@@ -19,6 +20,7 @@ import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 
 interface ApiService {
@@ -84,8 +86,8 @@ interface ApiService {
 
     @GET("marketplace/search")
     suspend fun searchPost(
-        @Path("query") query: String
-    ): List<PostResponse>
+        @Query("title") title: String
+    ): List<SearchResponseItem>
 
     @GET("comment/{id}/getComment")
     suspend fun getComment(

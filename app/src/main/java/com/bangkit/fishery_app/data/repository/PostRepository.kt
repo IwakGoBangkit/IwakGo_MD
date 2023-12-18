@@ -26,7 +26,7 @@ interface PostRepository {
         photo: File
     ): Flow<Result<PostResponse>>
 
-    suspend fun searchPost(query: String): Flow<Result<List<PostModel>>>
+    suspend fun searchPost(title: String): Flow<Result<List<PostModel>>>
 
     suspend fun getComment(idPost: Int): Flow<Result<List<CommentModel>>>
 
