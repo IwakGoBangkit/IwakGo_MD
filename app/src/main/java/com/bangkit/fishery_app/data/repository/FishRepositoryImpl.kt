@@ -5,11 +5,11 @@ import com.bangkit.fishery_app.data.model.ContentStepModel
 import com.bangkit.fishery_app.data.model.FishMenu
 import com.bangkit.fishery_app.data.model.HarvestContentModel
 import com.bangkit.fishery_app.data.model.Method
-import com.bangkit.fishery_app.data.source.remote.response.ScanResponse
 import com.bangkit.fishery_app.data.source.remote.retrofit.ApiConfig
+import com.bangkit.fishery_app.data.source.remote.retrofit.ScanApiConfig
+import com.bangkit.fishery_app.ui.screen.scan_result.model.DetectionResult
 import com.bangkit.fishery_app.util.Result
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import okhttp3.MediaType.Companion.toMediaType
@@ -150,7 +150,7 @@ class FishRepositoryImpl @Inject constructor() : FishRepository {
         }
     }.flowOn(Dispatchers.IO)
 
-    override fun scanFish(imageFish: File): Flow<Result<ScanResponse>>  = flow {
+    override fun scanFish(imageFish: File) = flow {
         val requestImageFile = imageFish.asRequestBody("image/jpg".toMediaType())
         val fileMultipart = MultipartBody.Part.createFormData(
             "image",
@@ -161,8 +161,10 @@ class FishRepositoryImpl @Inject constructor() : FishRepository {
         emit(Result.Loading())
 
         try {
-            val apiService = ApiConfig.getApiService()
-            val response = apiService.scanFish(fileMultipart)
+            val apiService = ScanApiConfig.getApiService()
+            val response = DetectionResult(
+                condition = apiService.scanFish(fileMultipart).prediction,
+            )
             emit(Result.Success(response))
         } catch (e: Exception) {
             emit(Result.Error(e.message))
