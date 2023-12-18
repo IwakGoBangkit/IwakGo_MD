@@ -35,6 +35,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -124,10 +125,6 @@ fun DetailPostContent(
     var showButtonSheet by rememberSaveable {
         mutableStateOf(false)
     }
-    var showEmptyInputWarning by rememberSaveable {
-        mutableStateOf(false)
-    }
-    val context = LocalContext.current
 
     Column(
         modifier = modifier.padding(top = 16.dp)
@@ -249,16 +246,9 @@ fun DetailPostContent(
                 inputComment = inputComment,
                 onInputCommentChange = onInputCommentChange,
                 onSendComment = {
-                    if (inputComment.isNotBlank()) {
-                        onSendComment()
-                    } else {
-                        showEmptyInputWarning = true
-                    }
+                    onSendComment()
                 }
             )
-        }
-        if (showEmptyInputWarning) {
-            Toast.makeText(context, stringResource(id = R.string.empty_input_warning), Toast.LENGTH_SHORT).show()
         }
     }
 }
@@ -274,6 +264,10 @@ fun CommentPage(
     onSendComment: () -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState()
+    var showEmptyWarning by remember {
+        mutableStateOf(false)
+    }
+    val context = LocalContext.current
     ModalBottomSheet(
         sheetState = sheetState, onDismissRequest = onCloseSheet
     ) {
@@ -328,7 +322,13 @@ fun CommentPage(
                         .padding(16.dp),
                     trailingIcon = {
                         IconButton(
-                            onClick = onSendComment,
+                            onClick = if (inputComment.isNotEmpty()) {
+                                onSendComment
+                            } else {
+                                {
+                                    showEmptyWarning = true
+                                }
+                            }
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Send,
@@ -343,6 +343,14 @@ fun CommentPage(
                         )
                     },
                 )
+                if (showEmptyWarning) {
+                    Toast.makeText(
+                        context,
+                        stringResource(R.string.empty_input_warning),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    showEmptyWarning = false
+                }
             }
         }
     }
