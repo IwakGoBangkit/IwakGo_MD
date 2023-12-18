@@ -42,7 +42,7 @@ class ScanFishViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             isLoading = false,
-                            condition = result.data
+                            condition = result.data.prediction
                         )
                     }
                 }

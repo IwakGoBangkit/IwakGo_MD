@@ -21,7 +21,6 @@ class ScanResultViewModel @Inject constructor(
     private val _state = MutableStateFlow(ScanResultState())
     val state = _state.asStateFlow()
 
-
     fun onEvent(event: ScanResultEvent) {
         when(event) {
             ScanResultEvent.ResetState -> {
@@ -55,6 +54,33 @@ class ScanResultViewModel @Inject constructor(
         }
     }
 
-
-
+    fun uploadImage(image: File) = viewModelScope.launch {
+        fishRepository.scanFish(image).collect{result ->
+            when(result) {
+                is Result.Error -> {
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = result.message
+                        )
+                    }
+                }
+                is Result.Loading -> {
+                    _state.update {
+                        it.copy(
+                            isLoading = true
+                        )
+                    }
+                }
+                is Result.Success -> {
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            condition = result.data.prediction
+                        )
+                    }
+                }
+            }
+        }
+    }
 }

@@ -4,7 +4,7 @@ import com.bangkit.fishery_app.data.model.ContentModel
 import com.bangkit.fishery_app.data.model.ContentStepModel
 import com.bangkit.fishery_app.data.model.FishMenu
 import com.bangkit.fishery_app.data.model.HarvestContentModel
-import com.bangkit.fishery_app.ui.screen.scan_result.model.DetectionResult
+import com.bangkit.fishery_app.data.source.remote.response.ScanFishResponse
 import com.bangkit.fishery_app.util.Result
 import kotlinx.coroutines.flow.Flow
 import java.io.File
@@ -24,5 +24,5 @@ interface FishRepository {
 
     suspend fun getFishDisease(name: String) : Flow<Result<List<ContentModel>>>
 
-    fun scanFish(imageFish: File): Flow<Result<DetectionResult>>
+    suspend fun scanFish(imageFish: File): Flow<Result<ScanFishResponse>>
 }
