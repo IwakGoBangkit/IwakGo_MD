@@ -69,7 +69,10 @@ fun ScanResultContent(
 
         SectionText(title = stringResource(R.string.fish_condition))
         
-        Text(text = condition)
+        Text(
+            if (condition != "") condition else stringResource(R.string.loading),
+            modifier = modifier.padding(8.dp),
+        )
 
         OutlinedButton(
             onClick = navigateToHome,
