@@ -10,7 +10,7 @@ object DateHelper {
 
     fun formatIsoDate(inputDate: String): String {
         val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
-        val outputFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd MMMM yyyy | hh:mm", Locale.getDefault())
 
         inputFormat.timeZone = TimeZone.getTimeZone("GMT")
         val date = try {
@@ -21,6 +21,7 @@ object DateHelper {
         }
 
         return if (date != null) {
+            outputFormat.timeZone = TimeZone.getDefault()
             outputFormat.format(date)
         } else {
             inputDate
