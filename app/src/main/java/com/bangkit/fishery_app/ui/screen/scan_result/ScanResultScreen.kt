@@ -1,5 +1,6 @@
 package com.bangkit.fishery_app.ui.screen.scan_result
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,9 +32,14 @@ fun ScanResultScreen(
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    LaunchedEffect(key1 = image) {
+        image?.imageFile?.let { viewModel.uploadImage(it) }
+    }
+
+    Log.d("CONDITION", "ScanResultScreen: ${state.condition}")
     ScanResultContent(
         navigateToHome = navigateToHome,
-        condition = state.condition,
+        condition = state.condition ?: "",
         image = image,
     )
 }
