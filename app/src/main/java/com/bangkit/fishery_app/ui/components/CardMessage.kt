@@ -48,13 +48,13 @@ fun CardMessageItem(
             ) {
                 Text(
                     text = username,
-                    fontSize = 20.sp,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = modifier
                 )
                 Text(
                     text = comment,
-                    fontSize = 12.sp,
+                    fontSize = 14.sp,
                     modifier = modifier
                 )
             }
