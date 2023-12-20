@@ -10,7 +10,7 @@ import com.bangkit.fishery_app.data.source.remote.response.FishPreservationRespo
 import com.bangkit.fishery_app.data.source.remote.response.FishResponseItem
 import com.bangkit.fishery_app.data.source.remote.response.FishSeedResponse
 import com.bangkit.fishery_app.data.source.remote.response.PostResponse
-import com.bangkit.fishery_app.data.source.remote.response.ScanResponse
+import com.bangkit.fishery_app.data.source.remote.response.ScanFishResponse
 import com.bangkit.fishery_app.data.source.remote.response.SearchResponseItem
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -82,7 +82,7 @@ interface ApiService {
     @POST("predict")
     suspend fun scanFish(
         @Part file: MultipartBody.Part?
-    ): ScanResponse
+    ): ScanFishResponse
 
     @GET("marketplace/search")
     suspend fun searchPost(
