@@ -30,6 +30,9 @@ sealed class Screen(val route: String) {
         fun createRoute(idPost: Int) = "market/$idPost/detail"
     }
 
+    object Payment: Screen("market/detail/payment")
+    object MethodPayment: Screen("market/detail/payment/pay")
+
     object AddPost : Screen("market/addPost")
 
     object Profile : Screen("profile")

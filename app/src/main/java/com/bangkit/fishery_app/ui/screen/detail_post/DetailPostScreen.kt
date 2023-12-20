@@ -58,12 +58,15 @@ import com.bangkit.fishery_app.data.model.PostModel
 import com.bangkit.fishery_app.ui.components.CardMessageItem
 import com.bangkit.fishery_app.ui.components.LoadingDialog
 import com.bangkit.fishery_app.ui.components.PostInfo
+import com.bangkit.fishery_app.ui.screen.payment.model.PaymentModel
 import com.bangkit.fishery_app.util.DateHelper
 import kotlinx.coroutines.launch
 
 @Composable
 fun DetailPostScreen(
-    id: Int, viewModel: DetailPostViewModel = hiltViewModel()
+    id: Int,
+    viewModel: DetailPostViewModel = hiltViewModel(),
+    navigateToPayment: (product : PaymentModel) -> Unit
 ) {
     LaunchedEffect(key1 = id) {
         viewModel.getDetailPostById(id)
@@ -92,6 +95,18 @@ fun DetailPostScreen(
                             )
                         )
                     }
+                },
+                navigateToPayment = {
+                    navigateToPayment(
+                        PaymentModel(
+                            id = detailPost.idPost.toLong(),
+                            image = detailPost.image,
+                            title = detailPost.title,
+                            location = detailPost.location,
+                            phone = detailPost.phone,
+                            price = detailPost.price.toInt()
+                        )
+                    )
                 }
             )
         }
@@ -120,6 +135,7 @@ fun DetailPostContent(
     inputComment: String,
     onInputCommentChange: (String) -> Unit,
     onSendComment: () -> Unit,
+    navigateToPayment: () -> Unit,
 ) {
 
     var showButtonSheet by rememberSaveable {
@@ -226,7 +242,10 @@ fun DetailPostContent(
             }
 
             Button(
-                onClick = {}, modifier = modifier.weight(1f)
+                onClick = {
+                    navigateToPayment()
+                },
+                modifier = modifier.weight(1f)
             ) {
                 Icon(
                     imageVector = Icons.Default.CreditCard,

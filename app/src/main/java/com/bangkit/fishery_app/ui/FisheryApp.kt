@@ -42,6 +42,9 @@ import com.bangkit.fishery_app.ui.screen.harvest.HarvestScreen
 import com.bangkit.fishery_app.ui.screen.home.HomeScreen
 import com.bangkit.fishery_app.ui.screen.home.model.ImageResult
 import com.bangkit.fishery_app.ui.screen.market.MarketScreen
+import com.bangkit.fishery_app.ui.screen.payment.PaymentMethodScreen
+import com.bangkit.fishery_app.ui.screen.payment.PaymentScreen
+import com.bangkit.fishery_app.ui.screen.payment.model.PaymentModel
 import com.bangkit.fishery_app.ui.screen.pool_selection.PoolSelectionScreen
 import com.bangkit.fishery_app.ui.screen.preservation.PreservationScreen
 import com.bangkit.fishery_app.ui.screen.privacy_safety.PrivacySafetyScreen
@@ -295,7 +298,30 @@ fun FisheryApp(
                 )
             ) {
                 val idPost = it.arguments?.getInt("idPost") ?: 0
-                DetailPostScreen(idPost)
+                DetailPostScreen(
+                    id = idPost,
+                    navigateToPayment = { product ->
+                        navController.currentBackStackEntry?.savedStateHandle?.set(
+                            "product", product
+                        )
+                        navController.navigate(Screen.Payment.route)
+                    }
+                )
+            }
+
+            composable(Screen.Payment.route) {
+                val product = navController.previousBackStackEntry?.savedStateHandle?.get<PaymentModel>("product")
+                PaymentScreen(
+                    content = product,
+                    onProductCountChanged = { _, _ -> },
+                    navigateToMethodPayment = {
+                        navController.navigate(Screen.MethodPayment.route)
+                    }
+                )
+            }
+
+            composable(Screen.MethodPayment.route) {
+                PaymentMethodScreen()
             }
 
             composable(Screen.AddPost.route) {

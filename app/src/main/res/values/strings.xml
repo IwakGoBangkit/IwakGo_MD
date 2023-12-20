@@ -94,4 +94,14 @@
 
     <string name="empty_input_warning">Input komentar belum diisi!</string>
     <string name="no_comment">Belum ada komentar disini</string>
+
+    <string name="product">Produk</string>
+    <string name="choose_method_payment">Pilih Metode Pembayaran</string>
+    <string name="method_payment">Metode Pembayaran</string>
+    <string name="pay">Bayar</string>
+    <string name="minus_symbol">-</string>
+    <string name="plus_symbol">+</string>
+    <string name="address">Alamat</string>
+    <string name="total">Total Bayar</string>
+    <string name="information_payment">Pembayaran dapat dilakukan ke salah satu pilihan dibawah ini dengan tujuan PT. IwakGo.co sebagai berikut :</string>
 </resources>
