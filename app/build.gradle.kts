@@ -115,9 +115,4 @@ dependencies {
     //SYSTEM UI
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.23.1")
 
-    //TF LITE
-    implementation("org.tensorflow:tensorflow-lite-task-vision:0.4.0")
-    implementation("org.tensorflow:tensorflow-lite:2.9.0")
-    implementation("org.tensorflow:tensorflow-lite-gpu:2.9.0")
-    implementation("org.tensorflow:tensorflow-lite-support:0.4.1")
 }
