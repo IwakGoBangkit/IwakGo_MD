@@ -11,7 +11,10 @@ This is a repository of IwakGo source code for building Android Application, Iwa
 - [Features](#features)
 
 ## User Interface
-
+<img src="https://raw.githubusercontent.com/IwakGoBangkit/IwakGo_MD/master/boarding.gif">
+<img src="https://raw.githubusercontent.com/IwakGoBangkit/IwakGo_MD/master/home.gif">
+<img src="https://raw.githubusercontent.com/IwakGoBangkit/IwakGo_MD/master/market.gif">
+<img src="https://raw.githubusercontent.com/IwakGoBangkit/IwakGo_MD/master/profile.gif">
 
 ## Architecture
 The project follows the MVVM (Model-View-ViewModel) design pattern. 
@@ -65,11 +68,7 @@ The IwakGo Android application offers the following key features:
 - User authentication using Firebase Auth, allowing users to create accounts and securely log in.
 - Seamless image loading and caching with Coil Compose, ensuring fast and efficient image rendering within the app.
 - Dependency injection with Dagger Hilt, promoting modularity and testability of the codebase.
-- Camera functionality using Camera X, enabling users to capture and work with photos within the app.
-- Integration of TensorFlow Lite for incorporating machine learning models, providing advanced food detection and human pose estimation.
-- Data storage and retrieval with Room, offering a reliable and efficient database solution for managing app data.
 - Network requests and API interactions facilitated by Retrofit, ensuring seamless communication with backend services.
 - Asynchronous data handling with Kotlin Flow, allowing for responsive and reactive programming.
-- Media playback using ExoPlayer, providing a powerful and customizable media player for playing audio content within the app.
 
 Please refer to the codebase and documentation for more detailed information on each feature.
